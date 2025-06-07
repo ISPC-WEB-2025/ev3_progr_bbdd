@@ -1,4 +1,4 @@
-from funciones_auxiliares import pausar
+from func_aux import pausar
 from menu import Menu
 
 class MenuUsuario(Menu):
