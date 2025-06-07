@@ -1,13 +1,14 @@
 from usuario import Usuario
 
-class UsuarioEstandar(Usuario):
+class Admin(Usuario):
     def __init__(self, username, nombre, password, email="", telefono="", direccion=""):
         super().__init__(username, nombre, password, email, telefono, direccion)
+        self.tipo = "admin"  # Sobrescribe el tipo
     
     def puede_gestionar_usuarios(self):
-        """Los usuarios estándar NO pueden gestionar usuarios"""
-        return False
+        """Los admins pueden gestionar usuarios"""
+        return True
     
     def puede_ver_reportes(self):
-        """Los usuarios estándar NO pueden ver reportes"""
-        return False
+        """Los admins pueden ver reportes"""
+        return True
