@@ -1,6 +1,6 @@
 import os
 import hashlib
-from datetime import datetime
+# from datetime import datetime
 
 def limpiar_pantalla():
     """Limpia la pantalla de la consola"""

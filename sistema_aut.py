@@ -1,8 +1,8 @@
 from usuario_estandar import UsuarioEstandar
-from funciones_auxiliares import*
+from func_aux import*
 from admin import Admin
 
-class SistemaAuth:
+class SistemaAut:
     def __init__(self):
         self.usuarios = {}
         self.usuario_actual = None

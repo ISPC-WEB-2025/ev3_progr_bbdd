@@ -1,5 +1,5 @@
-from funciones_auxiliares import limpiar_pantalla
-from funciones_auxiliares import mostrar_titulo
+from func_aux import limpiar_pantalla, mostrar_titulo
+
 
 class Menu:
     def __init__(self, usuario):
