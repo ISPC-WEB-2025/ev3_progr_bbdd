@@ -1,3 +1,5 @@
+from funciones_auxiliares import encriptar_password
+
 class Usuario:
     def __init__(self, username, nombre, password):
         self.username = username
