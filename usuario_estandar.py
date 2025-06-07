@@ -1,3 +1,5 @@
+from usuario import Usuario
+
 class UsuarioEstandar(Usuario):
     def __init__(self, username, nombre, password):
         super().__init__(username, nombre, password)
