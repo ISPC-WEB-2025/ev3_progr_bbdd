@@ -1,9 +1,10 @@
 import os
-import bcrypt # Importamos la librería bcrypt
+import hashlib
+from datetime import datetime
 
 def limpiar_pantalla():
-    """Limpia la consola para una mejor experiencia de usuario."""
-    os.system('cls' if os.name == 'nt' else 'clear')
+    """Limpia la pantalla de la consola"""
+    os.system('clear' if os.name == 'posix' else 'cls')
 
 def validar_contrasena(contrasena):
     """
@@ -23,13 +24,17 @@ def validar_contrasena(contrasena):
 
     return True, "Contraseña válida."
 
-def validar_dni(dni):
-    """
-    Valida el formato de un DNI argentino.
-    Debe contener solo dígitos y tener entre 7 y 8 caracteres.
-    """
-    if not dni.isdigit():
-        return False, "El DNI debe contener solo números."
-    if not (7 <= len(dni) <= 8):
-        return False, "El DNI debe tener entre 7 y 8 dígitos."
-    return True, "DNI válido."
+def encriptar_password(password):
+    """Encripta la contraseña usando SHA256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def mostrar_titulo(titulo):
+    """Muestra un título con formato"""
+    print("=" * len(titulo))
+    print(titulo)
+    print("=" * len(titulo))
+    print()
+
+def pausar():
+    """Pausa hasta que el usuario presione Enter"""
+    input("Presiona Enter para continuar...")

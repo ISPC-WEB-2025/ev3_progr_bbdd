@@ -1,17 +1,24 @@
-# Archivos de Python
+# Archivos de Python generados
 *.pyc
 __pycache__/
-.pytest_cache/
-.vscode/
-
-# Logs
-*.log
-*.sqlite3
 
 # Entornos virtuales
 venv/
 env/
+.venv/  # Agregado para entornos virtuales creados por PyCharm u otras herramientas
 
-# Archivos de sistema
-.DS_Store
-Thumbs.db
+# Archivos de configuración de IDEs y editores
+.vscode/    # Configuración de VS Code
+.idea/      # Carpetas de configuración de PyCharm
+
+
+# Logs
+*.log
+*.log.*
+
+# Archivos de sistema operativo
+.DS_Store    # macOS
+Thumbs.db    # Windows
+
+# Archivos de datos sensibles o temporales
+.env         # Archivos de variables de entorno
