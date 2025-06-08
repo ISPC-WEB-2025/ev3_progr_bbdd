@@ -267,6 +267,14 @@ class MenuAdmin(MenuBase):
             pausar()
             return
             
+        # Verificar si es el único administrador
+        if opcion == '1' and usuario.es_admin():
+            admins = [u for u in self.sistema.usuarios.values() if u.es_admin()]
+            if len(admins) == 1:
+                print("\n❌ No se puede cambiar el rol del único administrador del sistema.")
+                pausar()
+                return
+            
         # Crear nuevo usuario con el rol seleccionado
         perfil = usuario.perfil
         if opcion == '1':
@@ -280,6 +288,15 @@ class MenuAdmin(MenuBase):
         
         # Reemplazar usuario existente
         self.sistema.usuarios[nombre_usuario] = nuevo_usuario
+        
+        # Si el usuario modificado es el administrador actual y se cambió a usuario estándar,
+        # cerrar la sesión y volver al menú principal
+        if (nombre_usuario == self.sistema.usuario_actual.nombre_usuario and 
+            opcion == '1'):
+            print("\n⚠️ Has cambiado tu rol a Usuario Estándar. Cerrando sesión...")
+            pausar()
+            self.sistema.cerrar_sesion()
+            return
         
         print(f"\n✅ Rol de '{nombre_usuario}' cambiado exitosamente a {nuevo_rol}.")
         pausar()
