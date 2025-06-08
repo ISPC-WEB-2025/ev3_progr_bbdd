@@ -1,12 +1,56 @@
-from menu import Menu
-from usuario import UsuarioEstandar, Admin
-from func_aux import pausar
+from menu import MenuBase
+from src.models.usuario_estandar import UsuarioEstandar
+from src.models.admin import Admin
+from src.utils.func_aux import pausar
 # from datetime import datetime
 
-class MenuAdmin(Menu):
-    def __init__(self, usuario):
-        super().__init__(usuario)
+# Simulamos el almacenamiento de usuarios en memoria
+# Esta estructura será modificada por las funciones de gestión de usuarios
+# No está duplicado?    
+USUARIOS_REGISTRADOS = {
+    'admin': Admin("admin", "Administrador del Sistema", "admin123", 
+                    "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123"),
+    'usuario1': UsuarioEstandar("usuario1", "Juan Pérez", "user123", 
+                                "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456"),
+    'maria': UsuarioEstandar("maria", "María García", "maria456", 
+                              "maria.garcia@email.com", "", "Av. Libertador 789")
+}
+
+class MenuAdmin(MenuBase):
+    def __init__(self, sistema):
+        super().__init__(sistema)
     
+    def mostrar_menu(self):
+        """Muestra el menú para administradores"""
+        while True:
+            self.mostrar_encabezado("👑 MENÚ ADMINISTRADOR")
+            print("1. Ver lista de usuarios")
+            print("2. Cerrar sesión")
+            print()
+            
+            opcion = input("Seleccione una opción (1-2): ").strip()
+            
+            if opcion == "1":
+                self.mostrar_lista_usuarios()
+            elif opcion == "2":
+                self.sistema.cerrar_sesion()
+                break
+            else:
+                print("\n❌ Opción no válida.")
+                pausar()
+    
+    def mostrar_lista_usuarios(self):
+        """Muestra la lista de usuarios registrados"""
+        self.mostrar_encabezado("👥 LISTA DE USUARIOS")
+        
+        for username, usuario in self.sistema.usuarios.items():
+            print(f"\nUsuario: {username}")
+            print(f"Nombre: {usuario.perfil.nombre_completo}")
+            print(f"Email: {usuario.perfil.email}")
+            print("-" * 30)
+        
+        pausar()
+
     def mostrar_menu_principal(self):
         """Muestra el menú principal del administrador"""
         while True:
@@ -15,20 +59,17 @@ class MenuAdmin(Menu):
             self.mostrar_opcion(1, "👥", "Gestionar Usuarios")
             self.mostrar_opcion(2, "📊", "Ver Reportes del Sistema")
             self.mostrar_opcion(3, "⚙️", "Configuración")
-            self.mostrar_opcion(4, "📋", "Ver Logs")
-            self.mostrar_opcion(5, "🚪", "Cerrar Sesión")
+            self.mostrar_opcion(4, "🚪", "Cerrar Sesión")
             
-            opcion = self.obtener_opcion(5)
+            opcion = self.obtener_opcion(4) # Limita las opciones válidas a 1-4
             
             if opcion == '1':
                 self.gestionar_usuarios()
             elif opcion == '2':
                 self.ver_reportes()
             elif opcion == '3':
-                self.configuracion()
+                self.configuracion()  
             elif opcion == '4':
-                self.ver_logs()
-            elif opcion == '5':
                 print("\n👋 Cerrando sesión de administrador...")
                 pausar()
                 break
@@ -41,16 +82,16 @@ class MenuAdmin(Menu):
         self.mostrar_encabezado("GESTIÓN DE USUARIOS")
         
         print("👑 Administradores:")
-        for username, usuario in {k: v for k, v in self.obtener_todos_usuarios().items() if v.tipo == 'admin'}.items():
+        for nombre_usuario, usuario in {k: v for k, v in self.obtener_todos_usuarios().items() if v.tipo == 'admin'}.items():
             perfil = usuario.perfil.obtener_resumen()
-            print(f"   - {username} ({perfil['nombre']}) | Email: {perfil['email']}")
+            print(f"   - {nombre_usuario} ({perfil['nombre']}) | Email: {perfil['email']}")
         
         print()
         print("👤 Usuarios Estándar:")
-        for username, usuario in {k: v for k, v in self.obtener_todos_usuarios().items() if v.tipo == 'usuario'}.items():
+        for nombre_usuario, usuario in {k: v for k, v in self.obtener_todos_usuarios().items() if v.tipo == 'usuario'}.items():
             perfil = usuario.perfil.obtener_resumen()
-            completitud = "✅ Completo" if usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
-            print(f"   - {username} ({perfil['nombre']}) | {completitud}")
+            perfil_completo = "✅ Completo" if usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
+            print(f"   - {nombre_usuario} ({perfil['nombre']}) | {perfil_completo}")
         
         print()
         
@@ -185,7 +226,7 @@ class MenuAdmin(Menu):
         print()
         
         pausar()
-    
+
     '''
 # Funciones adicionales para el menú de administración
 # Estas funciones pueden ser descomentadas si se desea incluir en el menú

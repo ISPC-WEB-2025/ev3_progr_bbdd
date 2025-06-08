@@ -24,9 +24,9 @@ def validar_contrasena(contrasena):
 
     return True, "Contraseña válida."
 
-def encriptar_password(password):
+def encriptar_contrasena(contrasena):
     """Encripta la contraseña usando SHA256"""
-    return hashlib.sha256(password.encode()).hexdigest()
+    return hashlib.sha256(contrasena.encode()).hexdigest()
 
 def mostrar_titulo(titulo):
     """Muestra un título con formato"""
