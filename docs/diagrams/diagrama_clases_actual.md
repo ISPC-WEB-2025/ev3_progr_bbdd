@@ -2,7 +2,7 @@
 
 ## Descripción General
 
-El sistema está diseñado con una arquitectura orientada a objetos que separa las responsabilidades en diferentes clases. La estructura principal se basa en la gestión de usuarios y sus perfiles, con diferentes roles y niveles de acceso.
+Documentación actualizada del sistema, que está diseñado con una arquitectura orientada a objetos que separa las responsabilidades en diferentes clases. La estructura principal se basa en la gestión de usuarios y sus perfiles, con diferentes roles y niveles de acceso. 
 
 ## Diagrama Mermaid
 
@@ -221,4 +221,3 @@ classDiagram
 ### Mantenibilidad
 - El código está organizado en módulos lógicos
 - Las clases tienen una estructura clara
-- La documentación es completa y actualizada 

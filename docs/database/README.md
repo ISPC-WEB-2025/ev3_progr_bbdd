@@ -4,6 +4,19 @@
 
 El sistema utiliza una base de datos relacional para almacenar la información de usuarios y sus perfiles. La estructura está diseñada para mantener la integridad de los datos y facilitar las consultas más comunes.
 
+## Creación de la Base de Datos
+
+Para crear la base de datos y sus tablas, ejecute el script [scripts/crear_base_datos.sql](scripts/crear_base_datos.sql). Este script:
+- Crea la base de datos `sistema_usuarios`
+- Crea las tablas `usuarios` y `perfiles` con sus respectivas restricciones
+- Establece los índices necesarios
+- Crea un usuario administrador por defecto
+
+Para ejecutar el script:
+```bash
+mysql -u [usuario] -p < scripts/crear_base_datos.sql
+```
+
 ## Tablas
 
 ### Tabla: `usuarios`
@@ -43,14 +56,22 @@ Almacena la información personal de los usuarios.
 
 ## Índices
 
+Los índices se crean para optimizar el rendimiento de las consultas más frecuentes en la base de datos:
+
 ### Tabla `usuarios`
-- PRIMARY KEY (`id_usuario`)
-- UNIQUE INDEX (`nombre_usuario`)
+- PRIMARY KEY (`id_usuario`): Índice primario para identificar de forma única cada usuario
+- UNIQUE INDEX (`nombre_usuario`): Optimiza las búsquedas por nombre de usuario, especialmente útiles para:
+  - Iniciar sesión (login)
+  - Verificar disponibilidad de nombres de usuario
+  - Búsquedas rápidas de usuarios específicos
 
 ### Tabla `perfiles`
-- PRIMARY KEY (`id_perfil`)
-- UNIQUE INDEX (`id_usuario`)
-- UNIQUE INDEX (`email`)
+- PRIMARY KEY (`id_perfil`): Índice primario para identificar de forma única cada perfil
+- UNIQUE INDEX (`id_usuario`): Garantiza la relación uno a uno con la tabla usuarios
+- UNIQUE INDEX (`email`): Optimiza las búsquedas por email, útiles para:
+  - Verificar si un email ya está registrado
+  - Búsquedas de usuarios por su email
+  - Validación de unicidad de emails
 
 ## Consideraciones de Diseño
 
@@ -70,68 +91,13 @@ Almacena la información personal de los usuarios.
 - Las claves foráneas están indexadas
 - Se utilizan tipos de datos optimizados para cada columna
 
-## Consultas Comunes
+## Operaciones CRUD
 
-### 1. Create (Crear)
-```sql
--- Crear nuevo usuario
-INSERT INTO usuarios (nombre_usuario, contrasena_hash, rol)
-VALUES (?, ?, ?);
-
--- Crear perfil para usuario
-INSERT INTO perfiles (id_usuario, nombre, apellido, email, fecha_nacimiento, direccion, telefono)
-VALUES (?, ?, ?, ?, ?, ?, ?);
-```
-
-### 2. Read (Leer)
-```sql
--- Obtener información completa de un usuario
-SELECT u.*, p.*
-FROM usuarios u
-JOIN perfiles p ON u.id_usuario = p.id_usuario
-WHERE u.nombre_usuario = ?;
-
--- Verificar rol de usuario
-SELECT rol
-FROM usuarios
-WHERE nombre_usuario = ?;
-
--- Obtener lista de usuarios con perfiles incompletos
-SELECT u.nombre_usuario, p.*
-FROM usuarios u
-JOIN perfiles p ON u.id_usuario = p.id_usuario
-WHERE p.email IS NULL OR p.telefono IS NULL OR p.direccion IS NULL;
-
--- Obtener lista de todos los usuarios
-SELECT u.nombre_usuario, u.rol, p.nombre, p.apellido, p.email
-FROM usuarios u
-LEFT JOIN perfiles p ON u.id_usuario = p.id_usuario;
-```
-
-### 3. Update (Actualizar)
-```sql
--- Actualizar contraseña de usuario
-UPDATE usuarios
-SET contrasena_hash = ?
-WHERE id_usuario = ?;
-
--- Actualizar perfil de usuario
-UPDATE perfiles
-SET nombre = ?, apellido = ?, email = ?, fecha_nacimiento = ?, direccion = ?, telefono = ?
-WHERE id_usuario = ?;
-
--- Cambiar rol de usuario
-UPDATE usuarios
-SET rol = ?
-WHERE id_usuario = ?;
-```
-
-### 4. Delete (Eliminar)
-```sql
--- Eliminar usuario (el perfil se eliminará automáticamente por ON DELETE CASCADE)
-DELETE FROM usuarios
-WHERE id_usuario = ?;
-```
+Las operaciones CRUD (Create, Read, Update, Delete) se encuentran en el archivo [scripts/operaciones_crud.sql](scripts/operaciones_crud.sql). Este archivo contiene todas las consultas SQL necesarias para:
+- Crear nuevos usuarios y perfiles
+- Leer información de usuarios
+- Actualizar datos de usuarios y perfiles
+- Eliminar usuarios del sistema
 
 ## Mantenimiento
 
