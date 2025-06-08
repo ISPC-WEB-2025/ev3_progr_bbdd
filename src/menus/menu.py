@@ -56,19 +56,33 @@ class MenuPrincipal(MenuBase):
         """Permite crear un nuevo usuario estándar"""
         self.mostrar_encabezado("👤 CREAR NUEVO USUARIO")
         
+        # 1. Solicitar nombre de usuario
         nombre_usuario = input("Nombre de usuario: ").strip()
         if nombre_usuario in self.sistema.usuarios:
             print("\n❌ Este nombre de usuario ya existe.")
             pausar()
             return
         
-        nombre = input("Nombre completo: ").strip()
+        # 2. Solicitar y validar contraseña
+        while True:
+            contrasena = input("Contraseña: ").strip()
+            es_valida, mensaje = validar_contrasena(contrasena)
+            if es_valida:
+                break
+            print(f"\n❌ {mensaje}")
+            if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                return
+        
+        # 3. Solicitar datos del perfil
+        print("\n📋 DATOS DEL PERFIL")
+        nombre = input("Nombre: ").strip()
+        apellido = input("Apellido: ").strip()
         email = input("Email: ").strip()
         telefono = input("Teléfono: ").strip()
         direccion = input("Dirección: ").strip()
-        contrasena = input("Contraseña: ").strip()
         
-        nuevo_usuario = UsuarioEstandar(nombre_usuario, nombre, contrasena, email, telefono, direccion)
+        # 4. Crear el usuario
+        nuevo_usuario = UsuarioEstandar(nombre_usuario, nombre, apellido, contrasena, email, telefono, direccion)
         self.sistema.usuarios[nombre_usuario] = nuevo_usuario
         
         print("\n✅ Usuario creado exitosamente!")
