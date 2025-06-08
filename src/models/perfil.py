@@ -1,5 +1,5 @@
 class Perfil:
-    _contador_perfiles = 0    # Empezamos desde 3 porque existen 3 perfiles predet.
+    _contador_perfiles = 3    # Empezamos desde 3 porque existen 3 perfiles predet.
     
     def __init__(self, nombre, apellido, email="", telefono="", direccion="", id_perfil=None):
         if id_perfil is None:
@@ -12,6 +12,7 @@ class Perfil:
         self.email = email
         self.telefono = telefono
         self.direccion = direccion
+        self.ha_editado_datos_obligatorios = False  # Nuevo atributo para controlar ediciones
     
     @property
     def nombre_completo(self):
@@ -54,4 +55,4 @@ class Perfil:
     
     def tiene_datos_completos(self):
         """Verifica si el perfil tiene todos los datos obligatorios completos"""
-        return bool(self.nombre and self.apellido and self.email) 
+        return bool(self.nombre and self.apellido)  # Solo nombre y apellido son obligatorios 
