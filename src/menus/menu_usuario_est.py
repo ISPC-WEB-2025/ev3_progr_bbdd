@@ -1,9 +1,41 @@
-from func_aux import pausar
-from menu import Menu
+from menu import MenuBase
+from src.utils.func_aux import pausar
 
-class MenuUsuario(Menu):
-    def __init__(self, usuario):
-        super().__init__(usuario)
+class MenuUsuario(MenuBase):
+    def __init__(self, sistema):
+        super().__init__(sistema)
+    
+    def mostrar_menu(self):
+        """Muestra el menú para usuarios estándar"""
+        while True:
+            self.mostrar_encabezado("👤 MENÚ USUARIO")
+            print("1. Ver mi perfil")
+            print("2. Cerrar sesión")
+            print()
+            
+            opcion = input("Seleccione una opción (1-2): ").strip()
+            
+            if opcion == "1":
+                self.mostrar_perfil_usuario()
+            elif opcion == "2":
+                self.sistema.cerrar_sesion()
+                break
+            else:
+                print("\n❌ Opción no válida.")
+                pausar()
+    
+    def mostrar_perfil_usuario(self):
+        """Muestra el perfil del usuario actual"""
+        self.mostrar_encabezado("👤 MI PERFIL")
+        
+        usuario = self.sistema.usuario_actual
+        print(f"Usuario: {usuario.username}")
+        print(f"Nombre: {usuario.perfil.nombre_completo}")
+        print(f"Email: {usuario.perfil.email}")
+        print(f"Teléfono: {usuario.perfil.telefono}")
+        print(f"Dirección: {usuario.perfil.direccion}")
+        
+        pausar()
     
     def mostrar_menu_principal(self):
         """Muestra el menú principal del usuario estándar"""
