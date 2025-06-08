@@ -10,8 +10,8 @@ INSERT INTO usuarios (nombre_usuario, contrasena_hash, rol)
 VALUES (?, ?, ?);
 
 -- Crear perfil de usuario
-INSERT INTO perfiles (id_usuario, nombre, apellido, email, fecha_nacimiento, direccion, telefono)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT INTO perfiles (id_usuario, nombre, apellido, email, direccion, telefono)
+VALUES (?, ?, ?, ?, ?, ?);
 
 -- =============================================
 -- Operaciones READ (Leer)
@@ -53,7 +53,7 @@ UPDATE perfiles
 SET nombre = ?, 
     apellido = ?, 
     email = ?, 
-    fecha_nacimiento = ?, 
+    -- fecha_nacimiento = ?, -- faltó incorporar
     direccion = ?, 
     telefono = ?
 WHERE id_usuario = ?;

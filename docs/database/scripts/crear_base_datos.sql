@@ -11,8 +11,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombre_usuario VARCHAR(255) NOT NULL UNIQUE,
     contrasena_hash VARCHAR(255) NOT NULL,
     rol VARCHAR(50) NOT NULL CHECK (rol IN ('administrador', 'estandar')),
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    ultimo_acceso TIMESTAMP NULL
 );
 
 -- Crear tabla de perfiles
@@ -22,11 +20,9 @@ CREATE TABLE IF NOT EXISTS perfiles (
     nombre VARCHAR(255) NOT NULL,
     apellido VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE,
-    fecha_nacimiento DATE,
+    -- fecha_nacimiento DATE, -- faltó incorporar
     direccion VARCHAR(255),
     telefono VARCHAR(50),
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
 -- Crear índices
