@@ -121,7 +121,7 @@ El sistema está diseñado con una arquitectura orientada a objetos que separa l
 
 ---
 
-## Diagrama de Clases (Mermaid)
+## Diagrama de Clases (Mermaid) 
 
 ```mermaid
 classDiagram
