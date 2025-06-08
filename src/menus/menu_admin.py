@@ -1,38 +1,55 @@
 from src.menus.menu import MenuBase
 from src.models.usuario_estandar import UsuarioEstandar
 from src.models.admin import Admin
-from src.utils.func_aux import pausar
+from src.utils.func_aux import pausar, validar_contrasena
 # from datetime import datetime
 
 # Simulamos el almacenamiento de usuarios en memoria
 # Esta estructura será modificada por las funciones de gestión de usuarios
 # No está duplicado?    
 USUARIOS_REGISTRADOS = {
-    'admin': Admin("admin", "Administrador del Sistema", "admin123", 
-                    "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123"),
-    'usuario1': UsuarioEstandar("usuario1", "Juan Pérez", "user123", 
-                                "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456"),
-    'maria': UsuarioEstandar("maria", "María García", "maria456", 
-                              "maria.garcia@email.com", "", "Av. Libertador 789")
+    'admin': Admin("admin", "Administrador", "del Sistema", "admin123", 
+                    "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123", perfil_id=1),
+    'usuario1': UsuarioEstandar("usuario1", "Juan", "Pérez", "user123", 
+                                "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456", perfil_id=2),
+    'maria': UsuarioEstandar("maria", "María", "García", "maria456", 
+                              "maria.garcia@email.com", "", "Av. Libertador 789", perfil_id=3)
 }
 
-class MenuAdmin:
+class MenuAdmin(MenuBase):
     def __init__(self, sistema):
-        self.sistema = sistema
+        super().__init__(sistema)
+    
+    def mostrar_opcion(self, numero, emoji, texto):
+        """Muestra una opción del menú con formato"""
+        print(f"{numero}. {emoji} {texto}")
+    
+    def obtener_opcion(self, max_opciones):
+        """Obtiene y valida la opción seleccionada por el usuario"""
+        while True:
+            opcion = input(f"Seleccione una opción (1-{max_opciones}): ").strip()
+            if opcion.isdigit() and 1 <= int(opcion) <= max_opciones:
+                return opcion
+            print("\n❌ Opción no válida.")
+            pausar()
     
     def mostrar_menu(self):
         """Muestra el menú para administradores"""
         while True:
             self.mostrar_encabezado("👑 MENÚ ADMINISTRADOR")
-            print("1. Ver lista de usuarios")
-            print("2. Cerrar sesión")
+            
+            self.mostrar_opcion(1, "👥", "Gestión de Usuarios")
+            self.mostrar_opcion(2, "⚙️", "Configuración del sistema")
+            self.mostrar_opcion(3, "🚪", "Cerrar sesión")
             print()
             
-            opcion = input("Seleccione una opción (1-2): ").strip()
+            opcion = self.obtener_opcion(3)
             
-            if opcion == "1":
-                self.mostrar_lista_usuarios()
-            elif opcion == "2":
+            if opcion == '1':
+                self.gestionar_usuarios()
+            elif opcion == '2':
+                self.configuracion_sistema()
+            elif opcion == '3':
                 self.sistema.cerrar_sesion()
                 break
             else:
@@ -52,11 +69,25 @@ class MenuAdmin:
         """Muestra la lista de usuarios registrados"""
         self.mostrar_encabezado("👥 LISTA DE USUARIOS")
         
+        print("👑 ADMINISTRADORES:")
         for nombre_usuario, usuario in self.sistema.usuarios.items():
-            print(f"\nUsuario: {nombre_usuario}")
-            print(f"Nombre: {usuario.perfil.nombre_completo}")
-            print(f"Email: {usuario.perfil.email}")
-            print("-" * 30)
+            if usuario.es_admin():
+                info = usuario.obtener_info()
+                print(f"\nID: {info['id_usuario']} | Usuario: {nombre_usuario}")
+                print(f"Nombre: {info['nombre']} {info['apellido']}")
+                print(f"Email: {usuario.perfil.email}")
+                print(f"ID Perfil: {usuario.perfil.id_perfil}")
+                print("-" * 40)
+        
+        print("\n👤 USUARIOS ESTÁNDAR:")
+        for nombre_usuario, usuario in self.sistema.usuarios.items():
+            if not usuario.es_admin():
+                info = usuario.obtener_info()
+                print(f"\nID: {info['id_usuario']} | Usuario: {nombre_usuario}")
+                print(f"Nombre: {info['nombre']} {info['apellido']}")
+                print(f"Email: {usuario.perfil.email}")
+                print(f"ID Perfil: {usuario.perfil.id_perfil}")
+                print("-" * 40)
         
         pausar()
 
@@ -88,115 +119,200 @@ class MenuAdmin:
     
     def gestionar_usuarios(self):
         """Menú de gestión de usuarios"""
-        self.mostrar_encabezado("GESTIÓN DE USUARIOS")
-        
-        print("👑 Administradores:")
-        for nombre_usuario, usuario in {k: v for k, v in self.obtener_todos_usuarios().items() if v.tipo == 'admin'}.items():
-            perfil = usuario.perfil.obtener_resumen()
-            print(f"   - {nombre_usuario} ({perfil['nombre']}) | Email: {perfil['email']}")
-        
-        print()
-        print("👤 Usuarios Estándar:")
-        for nombre_usuario, usuario in {k: v for k, v in self.obtener_todos_usuarios().items() if v.tipo == 'usuario'}.items():
-            perfil = usuario.perfil.obtener_resumen()
-            perfil_completo = "✅ Completo" if usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
-            print(f"   - {nombre_usuario} ({perfil['nombre']}) | {perfil_completo}")
-        
-        print()
-        
-        self.mostrar_opcion(1, "➕", "Agregar Nuevo Usuario")
-        self.mostrar_opcion(2, "📝", "Ver Detalles de Usuario")
-        self.mostrar_opcion(3, "❌", "Eliminar Usuario")
-        self.mostrar_opcion(4, "🔙", "Volver al Menú Principal")
-        
-        opcion = self.obtener_opcion(4)
-        
-        if opcion == '1':
-            self.agregar_usuario()
-        elif opcion == '2':
-            self.ver_detalles_usuario()
-        elif opcion == '3':
-            self.eliminar_usuario()
-        # Opción 4 vuelve automáticamente
-        
-        pausar()
+        while True:
+            self.mostrar_encabezado("👥 GESTIÓN DE USUARIOS")
+            
+            self.mostrar_opcion(1, "📝", "Ver lista de usuarios")
+            self.mostrar_opcion(2, "➕", "Agregar usuario")
+            self.mostrar_opcion(3, "🔍", "Ver detalles de usuario")
+            self.mostrar_opcion(4, "⚙️ ", "Cambiar rol de usuario")
+            self.mostrar_opcion(5, "❌", "Eliminar usuario")
+            self.mostrar_opcion(6, "🏠", "Volver al menú principal")
+            print()
+            
+            opcion = self.obtener_opcion(6)  # Limita las opciones válidas a 1-6
+            
+            if opcion == '1':
+                self.mostrar_lista_usuarios()
+            elif opcion == '2':
+                self.agregar_usuario()
+            elif opcion == '3':
+                self.ver_detalles_usuario()
+            elif opcion == '4':
+                self.cambiar_rol_usuario()
+            elif opcion == '5':
+                self.eliminar_usuario()
+            elif opcion == '6':
+                break
+            else:
+                print("\n❌ Opción no válida.")
+                pausar()
     
     def obtener_todos_usuarios(self):
-        """Obtiene todos los usuarios del sistema (simulado)"""
-        # En una aplicación real, esto vendría de la base de datos
-        # Aquí simulamos acceso a los usuarios del sistema
-        return {
-            'admin': Admin("admin", "Administrador del Sistema", "admin123", 
-                          "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123"),
-            'usuario1': UsuarioEstandar("usuario1", "Juan Pérez", "user123", 
-                                       "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456"),
-            'maria': UsuarioEstandar("maria", "María García", "maria456", 
-                                    "maria.garcia@email.com", "", "Av. Libertador 789")
-        }
+        """Obtiene todos los usuarios del sistema"""
+        return self.sistema.usuarios
     
     def ver_detalles_usuario(self):
         """Muestra detalles completos de un usuario"""
-        print("\n--- VER DETALLES DE USUARIO ---")
+        self.mostrar_encabezado("🔍 DETALLES DE USUARIO")
+        
         nombre_usuario = input("Usuario a consultar: ").strip()
         
-        usuarios = self.obtener_todos_usuarios()
-        if nombre_usuario in usuarios:
-            usuario = usuarios[nombre_usuario]
+        if nombre_usuario in self.sistema.usuarios:
+            usuario = self.sistema.usuarios[nombre_usuario]
+            info = usuario.obtener_info()
             perfil = usuario.perfil.obtener_resumen()
             
             print(f"\n📋 PERFIL DE {nombre_usuario.upper()}:")
-            print(f"   • Nombre completo: {perfil['nombre']}")
+            print(f"   • ID Usuario: {info['id_usuario']}")
+            print(f"   • ID Perfil: {perfil['id_perfil']}")
+            print(f"   • Nombre: {info['nombre']}")
+            print(f"   • Apellido: {info['apellido']}")
             print(f"   • Email: {perfil['email']}")
             print(f"   • Teléfono: {perfil['telefono']}")
             print(f"   • Dirección: {perfil['direccion']}")
-            print(f"   • Tipo de cuenta: {usuario.tipo}")
-   
+            print(f"   • Tipo de cuenta: {'👑 Administrador' if usuario.es_admin() else '👤 Usuario Estándar'}")
             
             esta_completo = "✅ Completo" if usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
             print(f"   • Estado del perfil: {esta_completo}")
         else:
-            print("❌ Usuario no encontrado.")
+            print("\n❌ Usuario no encontrado.")
+        
+        pausar()
     
     def agregar_usuario(self):
-        """Simula agregar un nuevo usuario con perfil completo"""
-        print("\n--- AGREGAR USUARIO ---")
+        """Agrega un nuevo usuario al sistema"""
+        self.mostrar_encabezado("➕ AGREGAR USUARIO")
+        
+        # 1. Solicitar nombre de usuario
         nombre_usuario = input("Nombre de usuario: ").strip()
-        nombre = input("Nombre completo: ").strip()
+        if nombre_usuario in self.sistema.usuarios:
+            print("\n❌ El nombre de usuario ya existe.")
+            pausar()
+            return
+        
+        # 2. Solicitar y validar contraseña
+        while True:
+            contrasena = input("Contraseña: ").strip()
+            es_valida, mensaje = validar_contrasena(contrasena)
+            if es_valida:
+                break
+            print(f"\n❌ {mensaje}")
+            if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                return
+        
+        # 3. Solicitar datos del perfil
+        print("\n📋 DATOS DEL PERFIL")
+        nombre = input("Nombre: ").strip()
+        apellido = input("Apellido: ").strip()
         email = input("Email: ").strip()
         telefono = input("Teléfono (opcional): ").strip()
         direccion = input("Dirección (opcional): ").strip()
-        # .strip() es un método de cadena (string) que se utiliza para eliminar caracteres específicos
-        # del principio y/o del final de una cadena de texto.
-        # Por defecto, si no le pasas ningún argumento, .strip() eliminará los espacios en blanco
-
-        print("\nTipo de usuario:")
-        print("1. Usuario Estándar")
-        print("2. Administrador")
-        tipo = input("Selecciona (1-2): ").strip()
         
-        tipo_texto = "Usuario Estándar" if tipo == '1' else "Administrador"
+        # 4. Crear el usuario (siempre como estándar)
+        nuevo_usuario = UsuarioEstandar(nombre_usuario, nombre, apellido, contrasena, 
+                                      email, telefono, direccion)
         
-        print(f"\n✅ Usuario '{nombre_usuario}' creado exitosamente:")
-        print(f"   • Nombre: {nombre}")
+        # 5. Agregar al sistema
+        self.sistema.usuarios[nombre_usuario] = nuevo_usuario
+        
+        # 6. Mostrar confirmación
+        print(f"\n✅ Usuario '{nombre_usuario}' creado exitosamente como Usuario Estándar.")
+        print(f"   • Nombre: {nombre} {apellido}")
         print(f"   • Email: {email}")
-        print(f"   • Tipo: {tipo_texto}")
-        
         if telefono:
             print(f"   • Teléfono: {telefono}")
         if direccion:
             print(f"   • Dirección: {direccion}")
+        
+        pausar()
+
+    def cambiar_rol_usuario(self):
+        """Permite cambiar el rol de un usuario entre estándar y administrador"""
+        self.mostrar_encabezado("🔄 CAMBIAR ROL DE USUARIO")
+        
+        nombre_usuario = input("Usuario a modificar: ").strip()
+        if nombre_usuario not in self.sistema.usuarios:
+            print("\n❌ Usuario no encontrado.")
+            pausar()
+            return
+            
+        usuario = self.sistema.usuarios[nombre_usuario]
+        rol_actual = "Administrador" if usuario.es_admin() else "Usuario Estándar"
+        
+        print(f"\nRol actual: {rol_actual}")
+        print("\n¿A qué rol desea cambiarlo?")
+        print("1. Usuario Estándar")
+        print("2. Administrador")
+        
+        opcion = input("\nSeleccione una opción (1-2): ").strip()
+        
+        if opcion not in ['1', '2']:
+            print("\n❌ Opción no válida.")
+            pausar()
+            return
+            
+        nuevo_rol = "Usuario Estándar" if opcion == '1' else "Administrador"
+        
+        # Si el usuario ya tiene el rol seleccionado
+        if (opcion == '1' and not usuario.es_admin()) or (opcion == '2' and usuario.es_admin()):
+            print(f"\n⚠️ El usuario ya es {nuevo_rol}.")
+            pausar()
+            return
+            
+        # Confirmar cambio
+        confirmacion = input(f"\n¿Está seguro de cambiar el rol de '{nombre_usuario}' a {nuevo_rol}? (s/n): ").strip().lower()
+        if confirmacion != 's':
+            print("\n❌ Operación cancelada.")
+            pausar()
+            return
+            
+        # Crear nuevo usuario con el rol seleccionado
+        perfil = usuario.perfil
+        if opcion == '1':
+            nuevo_usuario = UsuarioEstandar(nombre_usuario, perfil.nombre, perfil.apellido, 
+                                          usuario.contrasena, perfil.email, perfil.telefono, 
+                                          perfil.direccion, perfil_id=perfil.id_perfil)
+        else:
+            nuevo_usuario = Admin(nombre_usuario, perfil.nombre, perfil.apellido, 
+                                usuario.contrasena, perfil.email, perfil.telefono, 
+                                perfil.direccion, perfil_id=perfil.id_perfil)
+        
+        # Reemplazar usuario existente
+        self.sistema.usuarios[nombre_usuario] = nuevo_usuario
+        
+        print(f"\n✅ Rol de '{nombre_usuario}' cambiado exitosamente a {nuevo_rol}.")
+        pausar()
     
     def eliminar_usuario(self):
-        """Simula eliminar un usuario"""
-        print("\n--- ELIMINAR USUARIO ---")
+        """Elimina un usuario del sistema"""
+        self.mostrar_encabezado("❌ ELIMINAR USUARIO")
+        
         nombre_usuario = input("Usuario a eliminar: ").strip()
         
-        confirmacion = input(f"¿Confirmas eliminar '{nombre_usuario}'? (s/n): ").strip().lower()
+        if nombre_usuario not in self.sistema.usuarios:
+            print("\n❌ Usuario no encontrado.")
+            pausar()
+            return
+            
+        usuario = self.sistema.usuarios[nombre_usuario]
         
+        # Verificar si es el único administrador
+        if usuario.es_admin():
+            admins = [u for u in self.sistema.usuarios.values() if u.es_admin()]
+            if len(admins) == 1:
+                print("\n❌ No se puede eliminar el único administrador del sistema.")
+                pausar()
+                return
+        
+        confirmacion = input(f"\n¿Está seguro de eliminar al usuario '{nombre_usuario}'? (s/n): ").strip().lower()
         if confirmacion == 's':
-            print(f"✅ Usuario '{nombre_usuario}' eliminado del sistema.")
+            del self.sistema.usuarios[nombre_usuario]
+            print(f"\n✅ Usuario '{nombre_usuario}' eliminado exitosamente.")
         else:
-            print("❌ Operación cancelada.")
+            print("\n❌ Operación cancelada.")
+        
+        pausar()
     
     def ver_reportes(self):
         """Muestra reportes del sistema"""
@@ -214,10 +330,11 @@ class MenuAdmin:
         print(f"   • Usuarios estándar: {usuarios_std}")
         print(f"   • Perfiles completos: {perfiles_completos}/{total_usuarios}")
         
-        
+        # Información de actividad reciente (simulada)
         print("\n📋 ACTIVIDAD RECIENTE:")
-        for nombre_usuario, usuario in usuarios.items():
-            perfil = usuario.perfil.obtener_resumen()            
+        print("   • Último inicio de sesión: Hace 5 minutos")
+        print("   • Última modificación: Hace 10 minutos")
+        print("   • Estado del sistema: Activo")
         
         print()
         
@@ -236,21 +353,83 @@ class MenuAdmin:
         
         pausar()
 
-    '''
-# Funciones adicionales para el menú de administración
-# Estas funciones pueden ser descomentadas si se desea incluir en el menú
-    def ver_logs(self):
-        """Muestra logs del sistema"""
-        self.mostrar_encabezado("LOGS DEL SISTEMA")
+    def configuracion_sistema(self):
+        """Muestra y permite modificar la configuración del sistema"""
+        while True:
+            self.mostrar_encabezado("⚙️ CONFIGURACIÓN DEL SISTEMA")
+            
+            print("1. Cambiar contraseña de administrador")
+            print("2. Ver políticas de contraseñas")
+            print("3. Configurar notificaciones")
+            print("4. Volver al menú principal")
+            print()
+            
+            opcion = input("Seleccione una opción (1-4): ").strip()
+            
+            if opcion == "1":
+                self.cambiar_contrasena_admin()
+            elif opcion == "2":
+                self.mostrar_politicas_contrasena()
+            elif opcion == "3":
+                self.configurar_notificaciones()
+            elif opcion == "4":
+                break
+            else:
+                print("\n❌ Opción no válida.")
+                pausar()
+    
+    def cambiar_contrasena_admin(self):
+        """Permite cambiar la contraseña del administrador actual"""
+        self.mostrar_encabezado("🔐 CAMBIAR CONTRASEÑA")
         
-        fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        print("📝 EVENTOS RECIENTES:")
-        print(f"   [{fecha_actual}] Sistema iniciado")
-        print(f"   [{fecha_actual}] Login exitoso: {self.usuario.nombre_usuario}")
-        print(f"   [{fecha_actual}] Acceso al panel de administración")
-        print()
+        contrasena_actual = input("Contraseña actual: ").strip()
+        if self.sistema.usuario_actual.verificar_contrasena(contrasena_actual):
+            while True:
+                nueva_contrasena = input("Nueva contraseña: ").strip()
+                es_valida, mensaje = validar_contrasena(nueva_contrasena)
+                if es_valida:
+                    confirmar = input("Confirmar nueva contraseña: ").strip()
+                    if nueva_contrasena == confirmar:
+                        self.sistema.usuario_actual.contrasena = nueva_contrasena
+                        print("\n✅ Contraseña actualizada exitosamente.")
+                        break
+                    else:
+                        print("\n❌ Las contraseñas no coinciden.")
+                else:
+                    print(f"\n❌ {mensaje}")
+                    if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                        break
+        else:
+            print("\n❌ Contraseña actual incorrecta.")
         
         pausar()
-    '''
+    
+    def mostrar_politicas_contrasena(self):
+        """Muestra las políticas de contraseñas del sistema"""
+        self.mostrar_encabezado("📝 POLÍTICAS DE CONTRASEÑAS")
+        
+        print("Requisitos de contraseña:")
+        print("   • Longitud mínima: 6 caracteres")
+        print("   • Debe contener al menos una letra")
+        print("   • Debe contener al menos un número")
+        print("   • No se permiten caracteres especiales")
+        print("\n💡 Recomendaciones:")
+        print("   • Use una contraseña única para este sistema")
+        print("   • No comparta su contraseña con nadie")
+        print("   • Cambie su contraseña periódicamente")
+        
+        pausar()
+    
+    def configurar_notificaciones(self):
+        """Permite configurar las notificaciones del sistema"""
+        self.mostrar_encabezado("🔔 CONFIGURACIÓN DE NOTIFICACIONES")
+        
+        print("Estado actual de las notificaciones:")
+        print("   • Notificaciones por email: Activadas")
+        print("   • Notificaciones de seguridad: Activadas")
+        print("   • Reportes semanales: Desactivados")
+        print("\n⚠️  Esta funcionalidad está en desarrollo.")
+        print("   Las notificaciones se implementarán en una futura versión.")
+        
+        pausar()
     

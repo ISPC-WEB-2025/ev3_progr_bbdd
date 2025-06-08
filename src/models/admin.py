@@ -1,9 +1,10 @@
 from src.models.usuario import Usuario
+from src.models.perfil import Perfil
 from src.utils.func_aux import *
 
 class Admin(Usuario):
-    def __init__(self, nombre_usuario, nombre_completo, contrasena, email="", telefono="", direccion=""):
-        super().__init__(nombre_usuario, nombre_completo, contrasena, email, telefono, direccion)
+    def __init__(self, nombre_usuario, nombre, apellido, contrasena, email, telefono="", direccion="", perfil_id=None):
+        super().__init__(nombre_usuario, nombre, apellido, contrasena, email, telefono, direccion, perfil_id)
     
     def verificar_contrasena(self, contrasena):
         """Verifica si la contraseña es correcta"""
@@ -13,6 +14,12 @@ class Admin(Usuario):
         """Indica si el usuario es administrador"""
         return True
     
-    def actualizar_perfil(self, nombre_completo=None, email=None, telefono=None, direccion=None):
+    def obtener_info(self):
+        """Devuelve información básica del usuario"""
+        info = super().obtener_info()
+        info['tipo'] = 'admin'
+        return info
+    
+    def actualizar_perfil(self, nombre=None, apellido=None, email=None, telefono=None, direccion=None):
         """Actualiza los datos del perfil"""
-        self.perfil.actualizar_perfil(nombre_completo, email, telefono, direccion)
+        self.perfil.actualizar_perfil(nombre, apellido, email, telefono, direccion)

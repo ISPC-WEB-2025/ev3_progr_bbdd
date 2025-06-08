@@ -11,19 +11,19 @@ class SistemaAut:
     
     def crear_usuarios_iniciales(self):
         """Crea los usuarios predeterminados del sistema"""
-        # Crear admin con perfil completo
-        admin = Admin("admin", "Administrador del Sistema", "admin123", 
-                     "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123, CABA")
-        self.usuarios["admin"] = admin
+        # Crear administrador
+        admin = Admin("admin", "Administrador", "Sistema", "admin123",
+                     "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123, CABA", perfil_id=1)
+        self.usuarios[admin.nombre_usuario] = admin
         
-        # Crear usuarios estándar con diferentes niveles de información
-        usuario1 = UsuarioEstandar("usuario1", "Juan Pérez", "user123", 
-                                  "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456, Córdoba")
-        self.usuarios["usuario1"] = usuario1
+        # Crear usuarios estándar
+        usuario1 = UsuarioEstandar("usuario1", "Juan", "Pérez", "user123",
+                                  "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456", perfil_id=2)
+        self.usuarios[usuario1.nombre_usuario] = usuario1
         
-        usuario2 = UsuarioEstandar("maria", "María García", "maria456", #
-                                  "maria.garcia@email.com", "", "Av. Libertador 789, Rosario")
-        self.usuarios["maria"] = usuario2 #
+        usuario2 = UsuarioEstandar("maria", "María", "García", "maria456",
+                                  "maria.garcia@email.com", "", "Av. Libertador 789", perfil_id=3)
+        self.usuarios[usuario2.nombre_usuario] = usuario2
 
 
     
@@ -55,7 +55,12 @@ class SistemaAut:
                 print()
             
             # Pedir credenciales
-            nombre_usuario = input("👤 Usuario: ").strip()
+            nombre_usuario = input("👤 Usuario (o 's' para salir): ").strip()
+            if nombre_usuario.lower() == 's':
+                print("\n👋 Operación cancelada por el usuario.")
+                pausar()
+                return False
+                
             contrasena = input("🔐 Contraseña: ").strip()
             
             # Verificar login

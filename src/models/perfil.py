@@ -1,14 +1,29 @@
 class Perfil:
-    def __init__(self, nombre_completo, email="", telefono="", direccion=""):
-        self.nombre_completo = nombre_completo
+    _contador_perfiles = 0    # Empezamos desde 3 porque existen 3 perfiles predet.
+    
+    def __init__(self, nombre, apellido, email="", telefono="", direccion="", id_perfil=None):
+        if id_perfil is None:
+            Perfil._contador_perfiles += 1
+            self.id_perfil = Perfil._contador_perfiles
+        else:
+            self.id_perfil = id_perfil
+        self.nombre = nombre
+        self.apellido = apellido
         self.email = email
         self.telefono = telefono
         self.direccion = direccion
     
-    def actualizar_perfil(self, nombre_completo=None, email=None, telefono=None, direccion=None):
+    @property
+    def nombre_completo(self):
+        """Retorna el nombre completo del usuario"""
+        return f"{self.nombre} {self.apellido}"
+    
+    def actualizar_perfil(self, nombre=None, apellido=None, email=None, telefono=None, direccion=None):
         """Actualiza los datos del perfil"""
-        if nombre_completo:
-            self.nombre_completo = nombre_completo
+        if nombre:
+            self.nombre = nombre
+        if apellido:
+            self.apellido = apellido
         if email:
             self.email = email
         if telefono:
@@ -18,7 +33,25 @@ class Perfil:
     
     def mostrar_perfil(self):
         """Muestra los datos del perfil"""
-        print(f"Nombre: {self.nombre_completo}")
+        print(f"ID Perfil: {self.id_perfil}")
+        print(f"Nombre: {self.nombre}")
+        print(f"Apellido: {self.apellido}")
         print(f"Email: {self.email}")
         print(f"Teléfono: {self.telefono}")
-        print(f"Dirección: {self.direccion}") 
+        print(f"Dirección: {self.direccion}")
+    
+    def obtener_resumen(self):
+        """Retorna un diccionario con el resumen del perfil"""
+        return {
+            'id_perfil': self.id_perfil,
+            'nombre': self.nombre,
+            'apellido': self.apellido,
+            'nombre_completo': self.nombre_completo,
+            'email': self.email,
+            'telefono': self.telefono,
+            'direccion': self.direccion
+        }
+    
+    def tiene_datos_completos(self):
+        """Verifica si el perfil tiene todos los datos obligatorios completos"""
+        return bool(self.nombre and self.apellido and self.email) 

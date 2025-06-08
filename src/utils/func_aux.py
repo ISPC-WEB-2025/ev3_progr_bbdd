@@ -29,10 +29,11 @@ def encriptar_contrasena(contrasena):
     return hashlib.sha256(contrasena.encode()).hexdigest()
 
 def mostrar_titulo(titulo):
-    """Muestra un título con formato"""
-    print("=" * len(titulo))
-    print(titulo)
-    print("=" * len(titulo))
+    """Muestra un título centrado con líneas decorativas"""
+    ancho = max(len(titulo) + 4, 50)  # Mínimo 50 caracteres de ancho
+    print("=" * ancho)
+    print(titulo.center(ancho))
+    print("=" * ancho)
     print()
 
 def pausar():
