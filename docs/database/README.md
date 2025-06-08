@@ -1,131 +1,149 @@
-# Diseño de Base de Datos para el Sistema de Gestión de Usuarios
+# Documentación de la Base de Datos
 
-## 1. Entidades Principales del Sistema
+## Descripción General
 
-El sistema actual se centra en la gestión de usuarios, por lo que la entidad principal identificada es:
+El sistema utiliza una base de datos relacional para almacenar la información de usuarios y sus perfiles. La estructura está diseñada para mantener la integridad de los datos y facilitar las consultas más comunes.
 
-* **Usuario**
+## Tablas
 
-## 2. Definición de Atributos por Entidad
+### Tabla: `usuarios`
 
-### Entidad: `usuarios`
+Almacena la información básica de autenticación de los usuarios.
 
-Representa a las personas que interactuarán con el sistema, ya sea como usuarios estándar o administradores.
+| Columna | Tipo | Restricciones | Descripción |
+|---------|------|---------------|-------------|
+| id_usuario | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único del usuario |
+| nombre_usuario | VARCHAR(255) | UNIQUE, NOT NULL | Nombre de usuario para login |
+| contrasena_hash | VARCHAR(255) | NOT NULL | Contraseña encriptada |
+| rol | VARCHAR(50) | NOT NULL, CHECK(rol IN ('administrador', 'estandar')) | Rol del usuario |
 
-| Atributo          | Tipo de Dato MySQL | Descripción                                         | Restricciones / Notas                                  |
-| :---------------- | :----------------- | :-------------------------------------------------- | :----------------------------------------------------- |
-| `id_usuario`      | `INT`              | Identificador único del usuario.                    | Clave Primaria (PK), AUTO_INCREMENT                 |
-| `nombre_usuario`  | `VARCHAR(255)`     | Nombre de usuario para iniciar sesión.              | NOT NULL, UNIQUE (no puede haber nombres duplicados)   |
-| `contrasena_hash` | `VARCHAR(255)`     | Hash SHA256 de la contraseña del usuario.           | NOT NULL (la contraseña siempre debe estar hasheada)   |
-| `rol`             | `VARCHAR(50)`      | Rol del usuario en el sistema.                      | NOT NULL, `CHECK('administrador', 'estandar')`       |
+### Tabla: `perfiles`
 
-## 3. Relaciones entre Entidades
+Almacena la información personal de los usuarios.
 
-Actualmente, solo existe una entidad principal (`usuarios`). Por lo tanto, no hay relaciones complejas entre múltiples tablas que necesiten ser definidas (como uno a muchos o muchos a muchos). La gestión de roles se maneja directamente como un atributo dentro de la misma tabla de `usuarios`.
+| Columna | Tipo | Restricciones | Descripción |
+|---------|------|---------------|-------------|
+| id_perfil | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único del perfil |
+| id_usuario | INT | FOREIGN KEY, UNIQUE, NOT NULL | Referencia al usuario |
+| nombre | VARCHAR(255) | NOT NULL | Nombre del usuario |
+| apellido | VARCHAR(255) | NOT NULL | Apellido del usuario |
+| email | VARCHAR(255) | UNIQUE, NULL | Correo electrónico |
+| fecha_nacimiento | DATE | NULL | Fecha de nacimiento |
+| direccion | VARCHAR(255) | NULL | Dirección física |
+| telefono | VARCHAR(50) | NULL | Número de teléfono |
 
-## 4. Proceso de Normalización (Tercera Forma Normal - 3FN)
+## Relaciones
 
-La tabla `usuarios` ha sido diseñada para cumplir con la Tercera Forma Normal (3FN):
+### Usuario - Perfil
+- Relación 1:1 (uno a uno)
+- Un usuario tiene exactamente un perfil
+- Un perfil pertenece a exactamente un usuario
+- La relación se mantiene mediante la clave foránea `id_usuario` en la tabla `perfiles`
+- Se implementa ON DELETE CASCADE (si se elimina un usuario, su perfil también se elimina)
 
-* **Primera Forma Normal (1FN):**
-    * Todos los atributos son atómicos (indivisibles). Por ejemplo, el nombre de usuario es un solo campo.
-    * No hay grupos repetitivos.
-    * Cada fila es única (gracias a `id_usuario` como PK).
-* **Segunda Forma Normal (2FN):**
-    * Está en 1FN.
-    * Todos los atributos no clave (`nombre_usuario`, `contrasena_hash`, `rol`) dependen completamente de la clave primaria (`id_usuario`). No hay dependencias parciales.
-* **Tercera Forma Normal (3FN):**
-    * Está en 2FN.
-    * No existen dependencias transitivas. Es decir, ningún atributo no clave depende de otro atributo no clave. El `rol` depende directamente del `id_usuario` y no de `nombre_usuario` o `contrasena_hash`.
+## Índices
 
-## 5. Modelo Relacional Resultante
+### Tabla `usuarios`
+- PRIMARY KEY (`id_usuario`)
+- UNIQUE INDEX (`nombre_usuario`)
 
-El modelo relacional consiste en una única tabla:
-```sql    
-usuarios (
-id_usuario INT PRIMARY KEY AUTO_INCREMENT,
-nombre_usuario VARCHAR(255) UNIQUE NOT NULL,
-contrasena_hash VARCHAR(255) NOT NULL,
-rol VARCHAR(50) NOT NULL CHECK (rol IN ('administrador', 'estandar'))
-)
-```
+### Tabla `perfiles`
+- PRIMARY KEY (`id_perfil`)
+- UNIQUE INDEX (`id_usuario`)
+- UNIQUE INDEX (`email`)
 
-* **Clave Primaria (PK):** `id_usuario`
-* **Claves Foráneas (FK):** No aplica en este modelo de una sola tabla.
+## Consideraciones de Diseño
 
-## 6. Documentación Adicional y Aclaraciones
+### Normalización
+- Las tablas están en 3FN (Tercera Forma Normal)
+- La información personal está separada de la información de autenticación
+- Se evita la redundancia de datos
 
-* **Roles de Usuario:** Se ha optado por almacenar el rol (`'administrador'` o `'estandar'`) directamente como un atributo en la tabla `usuarios`. Esta decisión se basa en la simplicidad de los requisitos actuales (solo dos roles fijos).
-    * **Suposición:** Se asume que un usuario solo puede tener un rol a la vez y que los roles posibles son fijos y conocidos de antemano. Para un sistema más complejo con múltiples roles por usuario o roles dinámicos, se consideraría una tabla `roles` y una tabla `usuario_roles` para una relación muchos a muchos. Para este proyecto, el enfoque actual es suficiente y cumple 3FN.
-* **Contraseñas:** Las contraseñas no se almacenan en texto plano. Se guardan como un hash SHA256 (`contrasena_hash`) para garantizar la seguridad.
-* **Unicidad del Nombre de Usuario:** El atributo `nombre_usuario` tiene una restricción `UNIQUE` para asegurar que no puedan existir dos usuarios con el mismo nombre.
+### Seguridad
+- Las contraseñas se almacenan encriptadas
+- Se utilizan tipos de datos apropiados para cada columna
+- Se implementan restricciones de unicidad donde es necesario
+- Se utiliza CHECK para validar los roles permitidos
 
-## 7. Consultas SQL Necesarias (CRUD del Usuario)
+### Rendimiento
+- Se utilizan índices para optimizar las búsquedas más comunes
+- Las claves foráneas están indexadas
+- Se utilizan tipos de datos optimizados para cada columna
 
-Aquí se definen las consultas SQL básicas para las operaciones CRUD (Create, Read, Update, Delete) sobre la tabla `usuarios`.
+## Consultas Comunes
 
-### A. CREATE (Crear Nuevo Usuario)
+### 1. Create (Crear)
 ```sql
+-- Crear nuevo usuario
 INSERT INTO usuarios (nombre_usuario, contrasena_hash, rol)
-VALUES ('nuevo_usuario', 'hash_contrasena_aqui', 'estandar');
-```
-En Python:
-```py
-database.crear_usuario()
+VALUES (?, ?, ?);
+
+-- Crear perfil para usuario
+INSERT INTO perfiles (id_usuario, nombre, apellido, email, fecha_nacimiento, direccion, telefono)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 ```
 
-### B. READ (Leer Usuarios)
-1. Leer Usuario por NOMBRE:
+### 2. Read (Leer)
 ```sql
-SELECT id_usuario, nombre_usuario, contrasena_hash, rol
+-- Obtener información completa de un usuario
+SELECT u.*, p.*
+FROM usuarios u
+JOIN perfiles p ON u.id_usuario = p.id_usuario
+WHERE u.nombre_usuario = ?;
+
+-- Verificar rol de usuario
+SELECT rol
 FROM usuarios
-WHERE nombre_usuario = 'nombre_a_buscar';
-```
-En Python:
-```py
-Llamado por database.obtener_usuario_por_nombre()
+WHERE nombre_usuario = ?;
+
+-- Obtener lista de usuarios con perfiles incompletos
+SELECT u.nombre_usuario, p.*
+FROM usuarios u
+JOIN perfiles p ON u.id_usuario = p.id_usuario
+WHERE p.email IS NULL OR p.telefono IS NULL OR p.direccion IS NULL;
+
+-- Obtener lista de todos los usuarios
+SELECT u.nombre_usuario, u.rol, p.nombre, p.apellido, p.email
+FROM usuarios u
+LEFT JOIN perfiles p ON u.id_usuario = p.id_usuario;
 ```
 
-2. Leer Usuario por ID
-
+### 3. Update (Actualizar)
 ```sql
-SELECT id_usuario, nombre_usuario, contrasena_hash, rol
-FROM usuarios
-WHERE id_usuario = 1;
-```
-En Python:
-```
-database.obtener_usuario_por_id()
-```
-3. Leer Todos los Usuarios
-
-```sql
-SELECT id_usuario, nombre_usuario, contrasena_hash, rol
-FROM usuarios;
-```
-En Python:
-```
-database.obtener_todos_los_usuarios()
-```
-
-### C. UPDATE (Actualizar Rol de Usuario)
-
-```sql
+-- Actualizar contraseña de usuario
 UPDATE usuarios
-SET rol = 'administrador'
-WHERE id_usuario = 1;
-```
-En Python:
-```
-database.actualizar_rol_usuario()
+SET contrasena_hash = ?
+WHERE id_usuario = ?;
+
+-- Actualizar perfil de usuario
+UPDATE perfiles
+SET nombre = ?, apellido = ?, email = ?, fecha_nacimiento = ?, direccion = ?, telefono = ?
+WHERE id_usuario = ?;
+
+-- Cambiar rol de usuario
+UPDATE usuarios
+SET rol = ?
+WHERE id_usuario = ?;
 ```
 
-### D. DELETE (Eliminar Usuario)
+### 4. Delete (Eliminar)
 ```sql
+-- Eliminar usuario (el perfil se eliminará automáticamente por ON DELETE CASCADE)
 DELETE FROM usuarios
-WHERE id_usuario = 1;
+WHERE id_usuario = ?;
 ```
-En Python:
-```
-database.eliminar_usuario()
-```
+
+## Mantenimiento
+
+### Backups
+- Se recomienda realizar backups diarios de la base de datos
+- Mantener un historial de backups por al menos 30 días
+
+### Limpieza
+- Los usuarios inactivos pueden ser archivados después de 6 meses
+- Mantener un registro de auditoría de cambios importantes
+
+### Monitoreo
+- Monitorear el tamaño de las tablas
+- Verificar la integridad de los índices periódicamente
+- Revisar el rendimiento de las consultas más frecuentes
