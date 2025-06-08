@@ -1,5 +1,5 @@
 class Perfil:
-    _contador_perfiles = 0    # Empezamos desde 3 porque existen 3 perfiles predet.
+    _contador_perfiles = 3    # Empezamos desde 3 porque existen 3 perfiles predet.
     
     def __init__(self, nombre, apellido, email="", telefono="", direccion="", id_perfil=None):
         if id_perfil is None:
