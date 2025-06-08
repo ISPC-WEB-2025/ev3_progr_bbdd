@@ -19,7 +19,3 @@ class Admin(Usuario):
         info = super().obtener_info()
         info['tipo'] = 'admin'
         return info
-    
-    def actualizar_perfil(self, nombre=None, apellido=None, email=None, telefono=None, direccion=None):
-        """Actualiza los datos del perfil"""
-        self.perfil.actualizar_perfil(nombre, apellido, email, telefono, direccion)
