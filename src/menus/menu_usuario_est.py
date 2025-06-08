@@ -1,4 +1,4 @@
-from menu import MenuBase
+from .menu import MenuBase
 from src.utils.func_aux import pausar
 
 class MenuUsuario(MenuBase):
@@ -29,7 +29,7 @@ class MenuUsuario(MenuBase):
         self.mostrar_encabezado("👤 MI PERFIL")
         
         usuario = self.sistema.usuario_actual
-        print(f"Usuario: {usuario.username}")
+        print(f"Usuario: {usuario.nombre_usuario}")
         print(f"Nombre: {usuario.perfil.nombre_completo}")
         print(f"Email: {usuario.perfil.email}")
         print(f"Teléfono: {usuario.perfil.telefono}")
@@ -76,7 +76,7 @@ class MenuUsuario(MenuBase):
         perfil = self.usuario.perfil.obtener_resumen()
         
         print("👤 INFORMACIÓN PERSONAL:")
-        print(f"   • Usuario: {self.usuario.username}")
+        print(f"   • Usuario: {self.usuario.nombre_usuario}")
         print(f"   • Nombre completo: {perfil['nombre']}")
         print(f"   • Email: {perfil['email']}")
         print(f"   • Teléfono: {perfil['telefono']}")
@@ -88,8 +88,8 @@ class MenuUsuario(MenuBase):
         print(f"   • Último acceso: {perfil['ultimo_acceso']}")
         print(f"   • Total de sesiones: {perfil['total_sesiones']}")
         
-        completitud = "✅ Completo" if self.usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
-        print(f"   • Estado del perfil: {completitud}")
+        perfil_completo = "✅ Completo" if self.usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
+        print(f"   • Estado del perfil: {perfil_completo}")
         
         if not self.usuario.perfil.tiene_datos_completos():
             print("\n💡 Tip: Completa tu perfil para acceder a todas las funcionalidades")
