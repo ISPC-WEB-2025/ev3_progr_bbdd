@@ -30,8 +30,8 @@ class MenuAdmin(MenuBase):
             self.mostrar_encabezado("👑 MENÚ ADMINISTRADOR")
             
             self.mostrar_opcion(1, "👥", "Gestión de Usuarios")
-            self.mostrar_opcion(2, "✏️", "Editar mi perfil")
-            self.mostrar_opcion(3, "⚙️", "Configuración del sistema")
+            self.mostrar_opcion(2, "✏️ ", "Editar mi perfil")
+            self.mostrar_opcion(3, "⚙️ ", "Configuración del sistema")
             self.mostrar_opcion(4, "🚪", "Cerrar sesión")
             print()
             
@@ -94,7 +94,7 @@ class MenuAdmin(MenuBase):
             self.mostrar_opcion(1, "📝", "Ver lista de usuarios")
             self.mostrar_opcion(2, "➕", "Agregar usuario")
             self.mostrar_opcion(3, "🔍", "Ver detalles de usuario")
-            self.mostrar_opcion(4, "✏️", "Editar perfil de usuario")
+            self.mostrar_opcion(4, "✏️", " Editar perfil de usuario")
             self.mostrar_opcion(5, "⚙️ ", "Cambiar rol de usuario")
             self.mostrar_opcion(6, "❌", "Eliminar usuario")
             self.mostrar_opcion(7, "🏠", "Volver al menú principal")
@@ -150,7 +150,7 @@ class MenuAdmin(MenuBase):
             print(f"   • Dirección: {perfil['direccion']}")
             print(f"   • Tipo de cuenta: {'👑 Administrador' if usuario.es_admin() else '👤 Usuario Estándar'}")
             
-            esta_completo = "✅ Completo" if usuario.perfil.tiene_datos_completos() else "⚠️ Incompleto"
+            esta_completo = "✅ Completo" if usuario.perfil.tiene_datos_completos() else "⚠️  Incompleto"
             print(f"   • Estado del perfil: {esta_completo}")
         else:
             print("\n❌ Usuario no encontrado.")
@@ -262,7 +262,7 @@ class MenuAdmin(MenuBase):
             print(f"   • ID Perfil: {nuevo_usuario.perfil.id_perfil}")
             
             if not nombre or not apellido:
-                print("\n⚠️ El perfil está incompleto. Deberá completar los datos obligatorios para continuar accediendo al sistema.")
+                print("\n⚠️  El perfil está incompleto. Deberá completar los datos obligatorios para continuar accediendo al sistema.")
             
         except Exception as e:
             print(f"\n❌ Error al crear el usuario: {str(e)}")
@@ -486,7 +486,7 @@ class MenuAdmin(MenuBase):
     def editar_perfil(self):
         """Permite al administrador editar su perfil"""
         while True:
-            self.mostrar_encabezado("✏️ EDITAR PERFIL")
+            self.mostrar_encabezado("✏️  EDITAR PERFIL")
             
             usuario = self.sistema.usuario_actual
             perfil = usuario.perfil
