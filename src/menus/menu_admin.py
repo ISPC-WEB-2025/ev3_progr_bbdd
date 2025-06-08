@@ -133,7 +133,7 @@ class MenuAdmin(MenuBase):
         """Muestra detalles completos de un usuario"""
         self.mostrar_encabezado("🔍 DETALLES DE USUARIO")
         
-        nombre_usuario = input("Usuario a consultar: ").strip()
+        nombre_usuario = input("Usuario a consultar: ").strip().lower()
         
         if nombre_usuario in self.sistema.usuarios:
             usuario = self.sistema.usuarios[nombre_usuario]
@@ -170,7 +170,7 @@ class MenuAdmin(MenuBase):
                     if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
                         return False # Si no desea intentar de nuevo, retorna a menú principal
                     continue
-                if nombre_usuario in self.sistema.usuarios:
+                if nombre_usuario.lower() in self.sistema.usuarios:
                     print("\n❌ El nombre de usuario ya existe.")
                     if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
                         return False # Si no desea intentar de nuevo, retorna a menú principal
@@ -247,7 +247,7 @@ class MenuAdmin(MenuBase):
                                           email, telefono, direccion)
             
             # 5. Agregar al sistema
-            self.sistema.usuarios[nombre_usuario] = nuevo_usuario
+            self.sistema.usuarios[nombre_usuario.lower()] = nuevo_usuario
             
             # 6. Mostrar confirmación
             print(f"\n✅ Usuario '{nombre_usuario}' creado exitosamente como Usuario Estándar.")
@@ -276,7 +276,7 @@ class MenuAdmin(MenuBase):
         """Permite cambiar el rol de un usuario entre estándar y administrador"""
         self.mostrar_encabezado("🔄 CAMBIAR ROL DE USUARIO")
         
-        nombre_usuario = input("Usuario a modificar: ").strip()
+        nombre_usuario = input("Usuario a modificar: ").strip().lower()
         if nombre_usuario not in self.sistema.usuarios:
             print("\n❌ Usuario no encontrado.")
             pausar()
@@ -336,7 +336,7 @@ class MenuAdmin(MenuBase):
         
         # Si el usuario modificado es el administrador actual y se cambió a usuario estándar,
         # cerrar la sesión y volver al menú principal
-        if (nombre_usuario == self.sistema.usuario_actual.nombre_usuario and 
+        if (nombre_usuario == self.sistema.usuario_actual.nombre_usuario.lower() and 
             opcion == '1'):
             print("\n⚠️ Has cambiado tu rol a Usuario Estándar.")
             print("Cerrando sesión...")
@@ -352,7 +352,7 @@ class MenuAdmin(MenuBase):
         """Elimina un usuario del sistema"""
         self.mostrar_encabezado("❌ ELIMINAR USUARIO")
         
-        nombre_usuario = input("Usuario a eliminar: ").strip()
+        nombre_usuario = input("Usuario a eliminar: ").strip().lower()
         
         if nombre_usuario not in self.sistema.usuarios:
             print("\n❌ Usuario no encontrado.")
@@ -376,7 +376,7 @@ class MenuAdmin(MenuBase):
             return False
             
         # Si el usuario a eliminar es el usuario actual
-        if nombre_usuario == self.sistema.usuario_actual.nombre_usuario:
+        if nombre_usuario == self.sistema.usuario_actual.nombre_usuario.lower():
             print("\n⚠️ Has eliminado tu propia cuenta.")
             print("Cerrando sesión...")
             del self.sistema.usuarios[nombre_usuario]
@@ -512,7 +512,7 @@ class MenuAdmin(MenuBase):
         """Permite al administrador editar el perfil de otro usuario"""
         self.mostrar_encabezado("✏️ EDITAR PERFIL DE USUARIO")
         
-        nombre_usuario = input("Usuario a modificar: ").strip()
+        nombre_usuario = input("Usuario a modificar: ").strip().lower()
         if nombre_usuario not in self.sistema.usuarios:
             print("\n❌ Usuario no encontrado.")
             pausar()

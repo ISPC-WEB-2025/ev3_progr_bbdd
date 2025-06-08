@@ -14,16 +14,16 @@ class SistemaAut:
         # Crear administrador
         admin = Admin("admin", "Administrador", "Sistema", "admin123",
                      "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123, CABA", perfil_id=1)
-        self.usuarios[admin.nombre_usuario] = admin
+        self.usuarios[admin.nombre_usuario.lower()] = admin
         
         # Crear usuarios estándar
         usuario1 = UsuarioEstandar("usuario1", "Juan", "Pérez", "user123",
                                   "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456", perfil_id=2)
-        self.usuarios[usuario1.nombre_usuario] = usuario1
+        self.usuarios[usuario1.nombre_usuario.lower()] = usuario1
         
         usuario2 = UsuarioEstandar("maria", "María", "García", "maria456",
                                   "maria.garcia@email.com", "", "Av. Libertador 789", perfil_id=3)
-        self.usuarios[usuario2.nombre_usuario] = usuario2
+        self.usuarios[usuario2.nombre_usuario.lower()] = usuario2
 
 
     
@@ -65,7 +65,7 @@ class SistemaAut:
             
             # Verificar login
             if self.verificar_credenciales(nombre_usuario, contrasena):
-                self.usuario_actual = self.usuarios[nombre_usuario]
+                self.usuario_actual = self.usuarios[nombre_usuario.lower()]
                 limpiar_pantalla()
                 mostrar_titulo("🔑 LOGIN EXITOSO")              
                 print(f"\n✅ ¡Bienvenido, {self.usuario_actual.perfil.nombre_completo}!")
@@ -85,6 +85,7 @@ class SistemaAut:
     
     def verificar_credenciales(self, nombre_usuario, contrasena):
         """Verifica si las credenciales son válidas"""
+        nombre_usuario = nombre_usuario.lower()
         if nombre_usuario in self.usuarios:
             return self.usuarios[nombre_usuario].verificar_contrasena(contrasena)
         return False

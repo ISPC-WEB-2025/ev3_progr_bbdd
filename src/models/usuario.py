@@ -17,10 +17,6 @@ class Usuario:
     def es_admin(self):
         """Indica si el usuario es administrador"""
         return False
-    
-    def actualizar_perfil(self, nombre=None, apellido=None, email=None, telefono=None, direccion=None):
-        """Actualiza los datos del perfil"""
-        self.perfil.actualizar_perfil(nombre, apellido, email, telefono, direccion)
 
     def obtener_info(self):
         """Devuelve información básica del usuario"""
