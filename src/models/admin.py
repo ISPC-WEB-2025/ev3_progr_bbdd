@@ -1,14 +1,18 @@
-from usuario import Usuario
+from src.models.usuario import Usuario
+from src.utils.func_aux import *
 
 class Admin(Usuario):
-    def __init__(self, username, nombre, password, email="", telefono="", direccion=""):
-        super().__init__(username, nombre, password, email, telefono, direccion)
-        self.tipo = "admin"  # Sobrescribe el tipo
+    def __init__(self, nombre_usuario, nombre_completo, contrasena, email="", telefono="", direccion=""):
+        super().__init__(nombre_usuario, nombre_completo, contrasena, email, telefono, direccion)
     
-    def puede_gestionar_usuarios(self):
-        """Los admins pueden gestionar usuarios"""
+    def verificar_contrasena(self, contrasena):
+        """Verifica si la contraseña es correcta"""
+        return self.contrasena == contrasena
+    
+    def es_admin(self):
+        """Indica si el usuario es administrador"""
         return True
     
-    def puede_ver_reportes(self):
-        """Los admins pueden ver reportes"""
-        return True
+    def actualizar_perfil(self, nombre_completo=None, email=None, telefono=None, direccion=None):
+        """Actualiza los datos del perfil"""
+        self.perfil.actualizar_perfil(nombre_completo, email, telefono, direccion)

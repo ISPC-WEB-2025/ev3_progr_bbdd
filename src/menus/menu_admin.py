@@ -1,4 +1,4 @@
-from menu import MenuBase
+from src.menus.menu import MenuBase
 from src.models.usuario_estandar import UsuarioEstandar
 from src.models.admin import Admin
 from src.utils.func_aux import pausar
@@ -16,9 +16,9 @@ USUARIOS_REGISTRADOS = {
                               "maria.garcia@email.com", "", "Av. Libertador 789")
 }
 
-class MenuAdmin(MenuBase):
+class MenuAdmin:
     def __init__(self, sistema):
-        super().__init__(sistema)
+        self.sistema = sistema
     
     def mostrar_menu(self):
         """Muestra el menú para administradores"""
@@ -39,12 +39,21 @@ class MenuAdmin(MenuBase):
                 print("\n❌ Opción no válida.")
                 pausar()
     
+    def mostrar_encabezado(self, titulo):
+        """Muestra el encabezado del menú"""
+        from src.utils.func_aux import limpiar_pantalla, mostrar_titulo
+        limpiar_pantalla()
+        mostrar_titulo(titulo)
+        if hasattr(self.sistema, 'usuario_actual') and self.sistema.usuario_actual:
+            print(f"Usuario: {self.sistema.usuario_actual.perfil.nombre_completo}")
+        print()
+    
     def mostrar_lista_usuarios(self):
         """Muestra la lista de usuarios registrados"""
         self.mostrar_encabezado("👥 LISTA DE USUARIOS")
         
-        for username, usuario in self.sistema.usuarios.items():
-            print(f"\nUsuario: {username}")
+        for nombre_usuario, usuario in self.sistema.usuarios.items():
+            print(f"\nUsuario: {nombre_usuario}")
             print(f"Nombre: {usuario.perfil.nombre_completo}")
             print(f"Email: {usuario.perfil.email}")
             print("-" * 30)
@@ -128,14 +137,14 @@ class MenuAdmin(MenuBase):
     def ver_detalles_usuario(self):
         """Muestra detalles completos de un usuario"""
         print("\n--- VER DETALLES DE USUARIO ---")
-        username = input("Usuario a consultar: ").strip()
+        nombre_usuario = input("Usuario a consultar: ").strip()
         
         usuarios = self.obtener_todos_usuarios()
-        if username in usuarios:
-            usuario = usuarios[username]
+        if nombre_usuario in usuarios:
+            usuario = usuarios[nombre_usuario]
             perfil = usuario.perfil.obtener_resumen()
             
-            print(f"\n📋 PERFIL DE {username.upper()}:")
+            print(f"\n📋 PERFIL DE {nombre_usuario.upper()}:")
             print(f"   • Nombre completo: {perfil['nombre']}")
             print(f"   • Email: {perfil['email']}")
             print(f"   • Teléfono: {perfil['telefono']}")
@@ -151,7 +160,7 @@ class MenuAdmin(MenuBase):
     def agregar_usuario(self):
         """Simula agregar un nuevo usuario con perfil completo"""
         print("\n--- AGREGAR USUARIO ---")
-        username = input("Nombre de usuario: ").strip()
+        nombre_usuario = input("Nombre de usuario: ").strip()
         nombre = input("Nombre completo: ").strip()
         email = input("Email: ").strip()
         telefono = input("Teléfono (opcional): ").strip()
@@ -167,7 +176,7 @@ class MenuAdmin(MenuBase):
         
         tipo_texto = "Usuario Estándar" if tipo == '1' else "Administrador"
         
-        print(f"\n✅ Usuario '{username}' creado exitosamente:")
+        print(f"\n✅ Usuario '{nombre_usuario}' creado exitosamente:")
         print(f"   • Nombre: {nombre}")
         print(f"   • Email: {email}")
         print(f"   • Tipo: {tipo_texto}")
@@ -180,12 +189,12 @@ class MenuAdmin(MenuBase):
     def eliminar_usuario(self):
         """Simula eliminar un usuario"""
         print("\n--- ELIMINAR USUARIO ---")
-        username = input("Usuario a eliminar: ").strip()
+        nombre_usuario = input("Usuario a eliminar: ").strip()
         
-        confirmacion = input(f"¿Confirmas eliminar '{username}'? (s/n): ").strip().lower()
+        confirmacion = input(f"¿Confirmas eliminar '{nombre_usuario}'? (s/n): ").strip().lower()
         
         if confirmacion == 's':
-            print(f"✅ Usuario '{username}' eliminado del sistema.")
+            print(f"✅ Usuario '{nombre_usuario}' eliminado del sistema.")
         else:
             print("❌ Operación cancelada.")
     
@@ -207,7 +216,7 @@ class MenuAdmin(MenuBase):
         
         
         print("\n📋 ACTIVIDAD RECIENTE:")
-        for username, usuario in usuarios.items():
+        for nombre_usuario, usuario in usuarios.items():
             perfil = usuario.perfil.obtener_resumen()            
         
         print()
@@ -238,7 +247,7 @@ class MenuAdmin(MenuBase):
         
         print("📝 EVENTOS RECIENTES:")
         print(f"   [{fecha_actual}] Sistema iniciado")
-        print(f"   [{fecha_actual}] Login exitoso: {self.usuario.username}")
+        print(f"   [{fecha_actual}] Login exitoso: {self.usuario.nombre_usuario}")
         print(f"   [{fecha_actual}] Acceso al panel de administración")
         print()
         

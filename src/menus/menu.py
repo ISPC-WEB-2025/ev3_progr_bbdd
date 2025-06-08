@@ -1,4 +1,4 @@
-from src.utils.func_aux import limpiar_pantalla, mostrar_titulo, pausar
+from src.utils.func_aux import *
 from src.models.usuario_estandar import UsuarioEstandar
 
 class MenuBase:
@@ -32,9 +32,13 @@ class MenuPrincipal(MenuBase):
             if opcion == "1":
                 if self.sistema.intentar_login():
                     if self.sistema.usuario_actual.es_admin():
+                        # Importamos aquí para evitar importación circular
+                        from src.menus.menu_admin import MenuAdmin
                         menu_admin = MenuAdmin(self.sistema)
                         menu_admin.mostrar_menu()
                     else:
+                        # Importamos aquí para evitar importación circular
+                        from src.menus.menu_usuario_est import MenuUsuario
                         menu_usuario = MenuUsuario(self.sistema)
                         menu_usuario.mostrar_menu()
             elif opcion == "2":
@@ -52,20 +56,20 @@ class MenuPrincipal(MenuBase):
         """Permite crear un nuevo usuario estándar"""
         self.mostrar_encabezado("👤 CREAR NUEVO USUARIO")
         
-        username = input("Nombre de usuario: ").strip()
-        if username in self.sistema.usuarios:
+        nombre_usuario = input("Nombre de usuario: ").strip()
+        if nombre_usuario in self.sistema.usuarios:
             print("\n❌ Este nombre de usuario ya existe.")
             pausar()
             return
         
         nombre = input("Nombre completo: ").strip()
-        password = input("Contraseña: ").strip()
         email = input("Email: ").strip()
         telefono = input("Teléfono: ").strip()
         direccion = input("Dirección: ").strip()
+        contrasena = input("Contraseña: ").strip()
         
-        nuevo_usuario = UsuarioEstandar(username, nombre, password, email, telefono, direccion)
-        self.sistema.usuarios[username] = nuevo_usuario
+        nuevo_usuario = UsuarioEstandar(nombre_usuario, nombre, contrasena, email, telefono, direccion)
+        self.sistema.usuarios[nombre_usuario] = nuevo_usuario
         
         print("\n✅ Usuario creado exitosamente!")
         pausar()

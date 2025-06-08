@@ -55,12 +55,12 @@ class SistemaAut:
                 print()
             
             # Pedir credenciales
-            username = input("👤 Usuario: ").strip()
-            password = input("🔐 Contraseña: ").strip()
+            nombre_usuario = input("👤 Usuario: ").strip()
+            contrasena = input("🔐 Contraseña: ").strip()
             
             # Verificar login
-            if self.verificar_credenciales(username, password):
-                self.usuario_actual = self.usuarios[username]
+            if self.verificar_credenciales(nombre_usuario, contrasena):
+                self.usuario_actual = self.usuarios[nombre_usuario]
                 limpiar_pantalla()
                 mostrar_titulo("🔑 LOGIN EXITOSO")              
                 print(f"\n✅ ¡Bienvenido, {self.usuario_actual.perfil.nombre_completo}!")
