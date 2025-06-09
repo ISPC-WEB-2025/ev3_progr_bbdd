@@ -1,20 +1,84 @@
-El presente documento detalla las actividades y responsabilidades asumidas por cada miembro del equipo en la resolución y desarrollo del proyecto:
+# Registro de Actividades del Proyecto
 
-### Miguel Ángel Flores:
-* **Diseño e implementación de la interfaz de navegación:** Lideró la creación de los menús del sistema, pieza clave para la interacción del usuario.
-* **Extensión y refinamiento de la lógica de negocio:** Realizó modificaciones y mejoras en las clases `Usuario`, `UsuarioEstandar` y `Admin`, adaptándolas a los requisitos del proyecto.
-* **Seguridad y acceso al sistema:** Desarrolló el sistema de autenticación, asegurando el control de acceso y la seguridad de las operaciones.
-* **Integridad de datos:** Implementó las validaciones necesarias para garantizar la correcta entrada y manipulación de datos en el sistema.
+Este documento detalla las contribuciones y responsabilidades de cada miembro del equipo en el desarrollo del Sistema de Gestión de Usuarios.
 
-### Brenda Soledad Pogliano:
-* **Definición de la arquitectura de clases:** Se encargó de la definición de las clases `Admin`, `UsuarioEstandar` y `Perfil`, sentando las bases para la gestión de distintos tipos de usuarios y sus atributos.
-* **Automatización de procesos:** Creó scripts esenciales para diversas funcionalidades del proyecto, optimizando tareas repetitivas o de configuración.
+## Contribuciones Individuales
 
-### Aylén Bartolino Luna:
-* **Desarrollo y soporte de funcionalidades:** Contribuyó al desarrollo de las funciones auxiliares del sistema.
-* **Definición de estructura de datos:** Fue responsable de la definición inicial de la clase `Usuario`, estableciendo sus atributos y métodos fundamentales.
+### Aylén Bartolino Luna
+#### Desarrollo de Clases Base
+- Definición de la clase Usuario base
+- Implementación de funcionalidades principales
+- Desarrollo de la lógica de negocio
 
-### Contribuciones colaborativas:
-* **Diseño de base de datos y modelo relacional:** Aylén y Brenda trabajaron conjuntamente en la elaboración del diagrama de clases y el diseño de la base de datos. Los tres participantes (Miguel, Brenda y Aylén) contribuyeron en la redacción del documento que contiene el modelo relacional resultante y la documentación del diseño de la Base de Datos (DER y Modelo Relacional).
-* **Desarrollo y mantenimiento del código base:** Los tres integrantes participaron activamente en el desarrollo del código del proyecto. Realizaron revisiones exhaustivas, refactorizaron el código para mejorar su calidad y mantenibilidad, y lo modularizaron para facilitar su escalabilidad y comprensión.
-* **Documentación del proyecto:** De manera conjunta, el equipo fue responsable de la redacción de este documento de tareas realizadas, así como de la escritura y corrección del archivo `README.md`, intentando garantizar una descripción clara y precisa del proyecto para futuros usuarios y colaboradores.
+#### Validación y Control
+- Implementación de validaciones de datos
+- Desarrollo de controles de integridad
+- Gestión de errores y excepciones
+
+#### Documentación Técnica
+- Redacción de documentación técnica
+- Creación de diagramas de clases
+- Mantenimiento de la documentación
+
+### Brenda Soledad Pogliano
+#### Arquitectura del Sistema
+- Diseño de la estructura de clases principales
+- Definición de la jerarquía de usuarios
+- Implementación del sistema de perfiles
+
+#### Base de Datos
+- Diseño del modelo relacional
+- Implementación de consultas SQL
+- Optimización de índices y relaciones
+
+#### Automatización
+- Desarrollo de scripts de configuración
+- Implementación de procesos automatizados
+- Optimización de tareas repetitivas
+
+### Miguel Ángel Flores
+#### Desarrollo de Interfaz
+- Diseño e implementación del sistema de menús
+- Creación de interfaces de usuario en consola
+- Desarrollo de la experiencia de usuario
+
+#### Seguridad
+- Implementación del sistema de autenticación
+- Desarrollo de validaciones de seguridad
+- Control de acceso basado en roles
+
+## Contribuciones Colaborativas
+
+### Diseño de Base de Datos
+- **Equipo**: Aylén y Brenda
+- Desarrollo del diagrama de clases
+- Diseño del modelo relacional
+- Documentación de la estructura de datos
+
+### Documentación
+- **Equipo**: Miguel, Brenda y Aylén
+- Redacción del README principal
+- Documentación técnica del sistema
+- Mantenimiento de la documentación
+
+### Desarrollo y Mantenimiento
+- **Equipo**: Miguel, Brenda y Aylén
+- Revisión y refactorización de código
+- Implementación de mejoras
+- Modularización del sistema
+
+## Metodología de Trabajo
+
+El equipo adoptó un enfoque colaborativo donde:
+1. Cada miembro se especializó en áreas específicas
+2. Se realizaron revisiones de código en equipo
+3. Se mantuvieron reuniones de sincronización
+4. Se documentaron los cambios y decisiones importantes
+
+## Resultados
+
+El trabajo en equipo resultó clave para lograr:
+- Un sistema modular y bien documentado
+- Código mantenible y escalable
+- Documentación clara y completa
+- Implementación exitosa de todos los requisitos
