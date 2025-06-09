@@ -2,6 +2,20 @@
 
 Sistema de gestión de usuarios desarrollado en Python que permite la administración de perfiles de usuario con diferentes niveles de acceso (administrador y usuario estándar).
 
+📦 Entregables
+Aquí puedes encontrar los enlaces a los entregables clave del proyecto:
+
+1. Programación I 
+ - [Diagrama de clases inicial](docs/diagrams/diagrama_clases.md)
+ - [Repositorio de código fuente](https://github.com/ISPC-WEB-2025/ev3_progr_bbdd)
+2. Bases de Datos
+ - [Documentación](docs/database/README.md)
+ - [Diagrama DER](docs/diagrams/diagrama_DER.md)
+ - [Script de creación de base de datos](docs/database/scripts/crear_base_datos.sql)
+ - [Script CRUD de Usuario](docs/database/scripts/operaciones_crud.sql)
+3. Informe del Proyecto
+ - [Actividades realizadas por cada estudiante](docs/project/actividades_log.md)
+
 ## 🚀 Características
 
 - Autenticación de usuarios con diferentes roles
@@ -75,8 +89,8 @@ python main.py
 
 El proyecto incluye dos diagramas de clases:
 
-1. [Diagrama de Clases Inicial](docs/diagrams/class_diagrams.md): Muestra la estructura base del sistema.
-2. [Diagrama de Clases Actual](docs/diagrams/class_diagrams_current.md): Refleja la implementación actual con todas las clases y sus relaciones.
+1. [Diagrama de Clases Inicial](docs/diagrams/diagrama_clases.md): Muestra la estructura base del sistema.
+2. [Diagrama de Clases Actual](docs/diagrams/diagrama_clases_actual.md): Refleja la implementación actual con todas las clases y sus relaciones.
 
 ### Base de Datos
 
@@ -86,6 +100,7 @@ La documentación detallada de la base de datos se encuentra en [docs/database/R
 - Índices
 - Consultas comunes
 - Consideraciones de diseño y mantenimiento
+También se incluye el diagrama DER en [Diagrama DER](docs/diagrams/diagrama_DER.md)
 
 ### Clases Principales
 
