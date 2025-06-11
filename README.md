@@ -68,7 +68,6 @@ python main.py
  ┃ ┃ ┣ 📜 __init__.py
  ┃ ┃ ┣ 📜 menu.py
  ┃ ┃ ┣ 📜 menu_admin.py
- ┃ ┃ ┣ 📜 menu_usuario.py
  ┃ ┃ ┗ 📜 menu_usuario_est.py
  ┃ ┗ 📂 utils
  ┃   ┣ 📜 __init__.py
