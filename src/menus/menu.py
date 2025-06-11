@@ -12,10 +12,27 @@ class MenuBase:
         if hasattr(self.sistema, 'usuario_actual') and self.sistema.usuario_actual:
             print(f"Usuario: {self.sistema.usuario_actual.perfil.nombre_completo}")
         print()
+    
+    def mostrar_opcion(self, numero, emoji, texto):
+        """Muestra una opción del menú con formato"""
+        print(f"{numero}. {emoji} {texto}")
+    
+    def obtener_opcion(self, max_opciones):
+        """Obtiene y valida la opción seleccionada por el usuario"""
+        while True:
+            opcion = input(f"\nSeleccione una opción (1-{max_opciones}): ").strip()
+            if opcion.isdigit() and 1 <= int(opcion) <= max_opciones:
+                return opcion
+            else:
+                print("\n❌ Opción no válida.")
+                pausar()
+                return None
+
 
 class MenuPrincipal(MenuBase):
     def __init__(self, sistema):
-        super().__init__(sistema)
+        super().__init__(sistema)    
+
     
     def mostrar_menu_principal(self):
         """Muestra el menú principal del sistema"""
