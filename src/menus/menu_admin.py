@@ -9,20 +9,20 @@ class MenuAdmin(MenuBase):
     def __init__(self, sistema):
         super().__init__(sistema)
     
-    def mostrar_opcion(self, numero, emoji, texto):
-        """Muestra una opción del menú con formato"""
-        print(f"{numero}. {emoji} {texto}")
+    # def mostrar_opcion(self, numero, emoji, texto):
+    #     """Muestra una opción del menú con formato"""
+    #     print(f"{numero}. {emoji} {texto}")
     
-    def obtener_opcion(self, max_opciones):
-        """Obtiene y valida la opción seleccionada por el usuario"""
-        while True:
-            opcion = input(f"Seleccione una opción (1-{max_opciones}): ").strip()
-            if opcion.isdigit() and 1 <= int(opcion) <= max_opciones:
-                return opcion
-            from src.utils.func_aux import limpiar_pantalla
-            limpiar_pantalla()
-            print("\n❌ Opción no válida.")
-            pausar()
+    # def obtener_opcion(self, max_opciones):
+    #     """Obtiene y valida la opción seleccionada por el usuario"""
+    #     while True:
+    #         opcion = input(f"Seleccione una opción (1-{max_opciones}): ").strip()
+    #         if opcion.isdigit() and 1 <= int(opcion) <= max_opciones:
+    #             return opcion
+    #         from src.utils.func_aux import limpiar_pantalla
+    #         limpiar_pantalla()
+    #         print("\n❌ Opción no válida.")
+    #         pausar()
     
     def mostrar_menu(self):
         """Muestra el menú para administradores"""
