@@ -14,6 +14,10 @@ class Perfil:
         self.direccion = direccion
         self.ha_editado_datos_obligatorios = False  # Nuevo atributo para controlar ediciones
     
+    def __str__(self):
+        """Representación en cadena de id, nombre y apellido del perfil"""
+        return f"Perfil ID: {self.id_perfil}, Nombre: {self.nombre} {self.apellido}"
+    
     @property
     def nombre_completo(self):
         """Retorna el nombre completo del usuario"""
@@ -47,7 +51,7 @@ class Perfil:
             'id_perfil': self.id_perfil,
             'nombre': self.nombre,
             'apellido': self.apellido,
-            'nombre_completo': self.nombre_completo,
+            #'nombre_completo': self.nombre_completo,
             'email': self.email,
             'telefono': self.telefono,
             'direccion': self.direccion
