@@ -5,9 +5,9 @@ from src.models.admin import Admin
 
 class SistemaAut:
     def __init__(self):
-        self.usuarios = {}
-        self.usuario_actual = None
-        self.crear_usuarios_iniciales()
+        self.usuarios = {} # Diccionario para almacenar usuarios
+        self.usuario_actual = None # Usuario que está logueado actualmente
+        self.crear_usuarios_iniciales() 
     
     def crear_usuarios_iniciales(self):
         """Crea los usuarios predeterminados del sistema"""
@@ -62,7 +62,7 @@ class SistemaAut:
                 return False
                 
             contrasena = input("🔐 Contraseña: ").strip()
-            
+           
             # Verificar login
             if self.verificar_credenciales(nombre_usuario, contrasena):
                 self.usuario_actual = self.usuarios[nombre_usuario.lower()]
