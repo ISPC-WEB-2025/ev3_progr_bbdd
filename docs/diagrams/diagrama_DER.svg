@@ -84,11 +84,6 @@
   <text x="510" y="220" class="texto-pequeno">direccion</text>
   <line x1="510" y1="200" x2="510" y2="180" class="linea"/>
   
-  <!-- ha_editado_datos_obligatorios -->
-  <ellipse cx="400" cy="220" rx="75" ry="20" class="atributo"/>
-  <text x="400" y="220" class="texto-pequeno">ha_editado_datos</text>
-  <line x1="425" y1="200" x2="450" y2="180" class="linea"/>
-  
   <!-- Entidad SISTEMA_AUTENTICACION -->
   <rect x="150" y="320" width="160" height="60" class="entidad"/>
   <text x="230" y="350" class="texto">SISTEMA_AUTENTICACION</text>
@@ -106,17 +101,7 @@
   <text x="200" y="200" class="texto-pequeno">N</text>
   <text x="230" y="300" class="texto-pequeno">1</text>
   
-  <!-- Atributos de SISTEMA_AUTENTICACION (más separados) -->
-  <!-- usuario_actual -->
-  <ellipse cx="50" cy="320" rx="50" ry="20" class="atributo"/>
-  <text x="50" y="320" class="texto-pequeno">usuario_actual</text>
-  <line x1="100" y1="320" x2="150" y2="340" class="linea"/>
-  
-  <!-- usuarios_registrados -->
-  <ellipse cx="40" cy="380" rx="65" ry="20" class="atributo"/>
-  <text x="50" y="380" class="texto-pequeno">usuarios_registrados</text>
-  <line x1="105" y1="380" x2="150" y2="360" class="linea"/>
-  
+   
   <!-- Título del diagrama -->
   <text x="400" y="15" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle;">Diagrama Entidad-Relación - Sistema de Gestión de Usuarios</text>
   
