@@ -45,16 +45,16 @@ class Usuario(ABC):
             'perfil': self.perfil.obtener_resumen()
         }
 
-    @classmethod
-    def obtener_todos(cls):
-        """Devuelve una lista de todos los usuarios"""
-        return cls._usuarios.copy() # Retorna una copia para evitar modificaciones externas
+    # @classmethod
+    # def obtener_todos(cls):
+    #     """Devuelve una lista de todos los usuarios"""
+    #     return cls._usuarios.copy() # Retorna una copia para evitar modificaciones externas
     
-    @classmethod
-    def obtener_usuario(cls, nombre_usuario):
-        """Busca un usuario por nombre de usuario"""
-        for usuario in cls._usuarios:
-            if usuario.nombre_usuario == nombre_usuario:
-                return usuario
-        return None
+    # @classmethod
+    # def obtener_usuario(cls, nombre_usuario):
+    #     """Busca un usuario por nombre de usuario"""
+    #     for usuario in cls._usuarios:
+    #         if usuario.nombre_usuario == nombre_usuario:
+    #             return usuario
+    #     return None
     
