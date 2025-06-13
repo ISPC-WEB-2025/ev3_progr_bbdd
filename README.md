@@ -10,7 +10,7 @@ Aquí puedes encontrar los enlaces a los entregables clave del proyecto:
  - [Repositorio de código fuente](https://github.com/ISPC-WEB-2025/ev3_progr_bbdd)
 2. Bases de Datos
  - [Documentación](docs/database/README.md)
- - [Diagrama DER](docs/diagrams/diagrama_DER.md)
+ - [Diagrama DER](docs/diagrams/diagrama_DER.svg)
  - [Script de creación de base de datos](docs/database/scripts/crear_base_datos.sql)
  - [Script CRUD de Usuario](docs/database/scripts/operaciones_crud.sql)
 3. Informe del Proyecto
@@ -19,10 +19,11 @@ Aquí puedes encontrar los enlaces a los entregables clave del proyecto:
 ## 🚀 Características
 
 - Autenticación de usuarios con diferentes roles
+- Menú de Administrador: Permite Crear, Editar, Eliminar y Cambiar Roles de Usuarios.
 - Gestión de perfiles de usuario
 - Interfaz de consola intuitiva
 - Validación de datos y seguridad
-- Sistema de encriptación de contraseñas
+- Sistema de encriptación de contraseñas * (no implementado)
 
 ## 📋 Requisitos
 

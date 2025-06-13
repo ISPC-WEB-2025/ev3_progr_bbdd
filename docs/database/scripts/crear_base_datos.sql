@@ -25,6 +25,32 @@ CREATE TABLE IF NOT EXISTS perfiles (
     telefono VARCHAR(50),
 );
 
+-- Crear tabla de sesiones
+CREATE TABLE IF NOT EXISTS sesiones (
+    session_id VARCHAR(255) PRIMARY KEY, -- Usamos VARCHAR para IDs de sesión generados (ej. UUIDs)
+    id_usuario INT NOT NULL,
+    fecha_inicio DATETIME NOT NULL,
+    fecha_expiracion DATETIME NOT NULL,
+    ultima_actividad DATETIME NOT NULL,
+    activa BOOLEAN DEFAULT TRUE,
+    ip_address VARCHAR(45), -- Soporte para IPv4 e IPv6
+    dispositivo_info TEXT, -- Información del navegador, OS, etc.
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+);
+
+-- Crear tabla de logs de actividad
+CREATE TABLE IF NOT EXISTS logs_actividad (
+    id_log INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT, -- Puede ser NULL si la acción no está asociada a un usuario específico (ej. intento de login fallido)
+    session_id VARCHAR(255),
+    accion VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    fecha_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ip_address VARCHAR(45),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL, -- Si el usuario se elimina, el id_usuario en logs se pone a NULL
+    FOREIGN KEY (session_id) REFERENCES sesiones(session_id) ON DELETE SET NULL -- Si la sesión se elimina, el session_id en logs se pone a NULL
+);
+
 -- Crear índices
 CREATE INDEX idx_nombre_usuario ON usuarios(nombre_usuario);
 CREATE INDEX idx_email ON perfiles(email);
@@ -36,3 +62,7 @@ VALUES ('admin', SHA2('admin123', 256), 'administrador');
 -- Crear perfil para el administrador por defecto
 INSERT INTO perfiles (id_usuario, nombre, apellido, email)
 VALUES (LAST_INSERT_ID(), 'Administrador', 'Sistema', 'admin@sistema.com'); 
+
+-- Los índices son fundamentales para el rendimiento y la escalabilidad de tu base de datos, 
+-- permitiendo que las operaciones de lectura sean rápidas y eficientes, lo cual es especialmente importante 
+-- en tablas que almacenan muchos datos o son consultadas frecuentemente.

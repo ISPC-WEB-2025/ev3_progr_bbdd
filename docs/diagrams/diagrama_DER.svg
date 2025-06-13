@@ -1,0 +1,141 @@
+<svg viewBox="0 0 750 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definiciones de estilos -->
+  <defs>
+    <style>
+      .entidad { fill: #FFE4B5; stroke: #000; stroke-width: 2; }
+      .atributo { fill: #E6F3FF; stroke: #000; stroke-width: 1.5; }
+      .atributo-clave { fill: #FFB6C1; stroke: #000; stroke-width: 2; }
+      .relacion { fill: #98FB98; stroke: #000; stroke-width: 2; }
+      .texto { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; dominant-baseline: middle; }
+      .texto-pequeno { font-family: Arial, sans-serif; font-size: 8px; text-anchor: middle; dominant-baseline: middle; }
+      .linea { stroke: #000; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  
+  <!-- Entidad USUARIO -->
+  <rect x="150" y="120" width="120" height="60" class="entidad"/>
+  <text x="210" y="150" class="texto">USUARIO</text>
+  
+  <!-- Atributos de USUARIO -->
+  <!-- id_usuario (clave primaria) -->
+  <ellipse cx="80" cy="80" rx="45" ry="20" class="atributo-clave"/>
+  <text x="80" y="80" class="texto-pequeno">id_usuario</text>
+  <line x1="125" y1="80" x2="150" y2="120" class="linea"/>
+  
+  <!-- nombre_usuario -->
+  <ellipse cx="210" cy="50" rx="50" ry="20" class="atributo"/>
+  <text x="210" y="50" class="texto-pequeno">nombre_usuario</text>
+  <line x1="210" y1="70" x2="210" y2="120" class="linea"/>
+  
+  <!-- contrasena -->
+  <ellipse cx="340" cy="80" rx="40" ry="20" class="atributo"/>
+  <text x="340" y="80" class="texto-pequeno">contrasena</text>
+  <line x1="315" y1="80" x2="270" y2="120" class="linea"/>
+  
+  <!-- rol -->
+  <ellipse cx="80" cy="200" rx="25" ry="20" class="atributo"/>
+  <text x="80" y="200" class="texto-pequeno">rol</text>
+  <line x1="105" y1="200" x2="150" y2="180" class="linea"/>
+  
+  <!-- Relación TIENE -->
+  <polygon points="300,150 340,130 380,150 340,170" class="relacion"/>
+  <text x="340" y="150" class="texto">TIENE</text>
+  
+  <!-- Líneas de relación -->
+  <line x1="270" y1="150" x2="300" y2="150" class="linea"/>
+  <line x1="380" y1="150" x2="450" y2="150" class="linea"/>
+  
+  <!-- Cardinalidades -->
+  <text x="280" y="140" class="texto-pequeno">1</text>
+  <text x="400" y="140" class="texto-pequeno">1</text>
+  
+  <!-- Entidad PERFIL -->
+  <rect x="450" y="120" width="120" height="60" class="entidad"/>
+  <text x="510" y="150" class="texto">PERFIL</text>
+  
+  <!-- Atributos de PERFIL -->
+  <!-- id_perfil (clave primaria) -->
+  <ellipse cx="650" cy="80" rx="40" ry="20" class="atributo-clave"/>
+  <text x="650" y="80" class="texto-pequeno">id_perfil</text>
+  <line x1="625" y1="80" x2="570" y2="120" class="linea"/>
+  
+  <!-- nombre -->
+  <ellipse cx="600" cy="50" rx="35" ry="20" class="atributo"/>
+  <text x="600" y="50" class="texto-pequeno">nombre</text>
+  <line x1="580" y1="60" x2="540" y2="120" class="linea"/>
+  
+  <!-- apellido -->
+  <ellipse cx="510" cy="50" rx="35" ry="20" class="atributo"/>
+  <text x="510" y="50" class="texto-pequeno">apellido</text>
+  <line x1="510" y1="70" x2="510" y2="120" class="linea"/>
+  
+  <!-- email -->
+  <ellipse cx="700" cy="120" rx="30" ry="20" class="atributo"/>
+  <text x="700" y="120" class="texto-pequeno">email</text>
+  <line x1="670" y1="120" x2="570" y2="120" class="linea"/>
+  
+  <!-- telefono -->
+  <ellipse cx="650" cy="200" rx="35" ry="20" class="atributo"/>
+  <text x="650" y="200" class="texto-pequeno">telefono</text>
+  <line x1="625" y1="200" x2="570" y2="180" class="linea"/>
+  
+  <!-- direccion -->
+  <ellipse cx="510" cy="220" rx="40" ry="20" class="atributo"/>
+  <text x="510" y="220" class="texto-pequeno">direccion</text>
+  <line x1="510" y1="200" x2="510" y2="180" class="linea"/>
+  
+  <!-- ha_editado_datos_obligatorios -->
+  <ellipse cx="400" cy="220" rx="75" ry="20" class="atributo"/>
+  <text x="400" y="220" class="texto-pequeno">ha_editado_datos</text>
+  <line x1="425" y1="200" x2="450" y2="180" class="linea"/>
+  
+  <!-- Entidad SISTEMA_AUTENTICACION -->
+  <rect x="150" y="320" width="160" height="60" class="entidad"/>
+  <text x="230" y="350" class="texto">SISTEMA_AUTENTICACION</text>
+  
+  <!-- Relación GESTIONA -->
+  <polygon points="200,250 240,230 280,250 240,270" class="relacion"/>
+  <text x="240" y="250" class="texto">GESTIONA</text>
+  
+  <!-- Líneas de relación GESTIONA -->
+  <line x1="210" y1="180" x2="210" y2="230" class="linea" stroke="red" stroke-width="2"/>
+  <line x1="210" y1="230" x2="240" y2="230" class="linea" stroke="red" stroke-width="2"/>
+  <line x1="240" y1="270" x2="240" y2="320" class="linea" stroke="red" stroke-width="2"/>
+  
+  <!-- Cardinalidades GESTIONA -->
+  <text x="200" y="200" class="texto-pequeno">N</text>
+  <text x="230" y="300" class="texto-pequeno">1</text>
+  
+  <!-- Atributos de SISTEMA_AUTENTICACION (más separados) -->
+  <!-- usuario_actual -->
+  <ellipse cx="50" cy="320" rx="50" ry="20" class="atributo"/>
+  <text x="50" y="320" class="texto-pequeno">usuario_actual</text>
+  <line x1="100" y1="320" x2="150" y2="340" class="linea"/>
+  
+  <!-- usuarios_registrados -->
+  <ellipse cx="40" cy="380" rx="65" ry="20" class="atributo"/>
+  <text x="50" y="380" class="texto-pequeno">usuarios_registrados</text>
+  <line x1="105" y1="380" x2="150" y2="360" class="linea"/>
+  
+  <!-- Título del diagrama -->
+  <text x="400" y="15" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle;">Diagrama Entidad-Relación - Sistema de Gestión de Usuarios</text>
+  
+  <!-- Leyenda -->
+  <g transform="translate(450, 350)">
+    <ellipse cx="25" cy="15" rx="20" ry="12" class="atributo-clave"/>
+    <text x="25" y="15" class="texto-pequeno">Clave</text>
+    <text x="70" y="15" style="font-size: 10px;">Atributo Clave</text>
+    
+    <ellipse cx="175" cy="15" rx="20" ry="12" class="atributo"/>
+    <text x="175" y="15" class="texto-pequeno">Attr</text>
+    <text x="210" y="15" style="font-size: 10px;">Atributo</text>
+    
+    <rect x="5" y="40" width="40" height="20" class="entidad"/>
+    <text x="25" y="50" class="texto-pequeno">ENT</text>
+    <text x="70" y="50" style="font-size: 10px;">Entidad</text>
+    
+    <polygon points="155,53 175,45 195,53 175,61" class="relacion"/>
+    <text x="175" y="53" class="texto-pequeno">REL</text>
+    <text x="210" y="53" style="font-size: 10px;">Relación</text>
+  </g>
+</svg>
