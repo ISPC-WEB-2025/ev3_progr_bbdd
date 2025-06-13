@@ -28,6 +28,147 @@ class MenuBase:
                 print("\n❌ Opción no válida.")
                 pausar()
                 return None
+    
+    def _recopilar_datos_perfil(self):
+        """
+        Método auxiliar para recolectar los datos específicos del perfil.
+        Devuelve un diccionario con los datos del perfil.
+        """
+        datos_perfil = {}
+        print("\n📋 DATOS DEL PERFIL")
+
+        # --- Validaciones y Recolección de Datos de Perfil ---
+        # Nombre (obligatorio)
+        while True:
+            nombre = input("Nombre: ").strip()
+            if not nombre:
+                print("\n❌ El nombre es obligatorio.")
+                if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                    break # Salimos del bucle, nombre queda vacío
+                continue
+            break
+        datos_perfil['nombre'] = nombre
+
+        # Apellido (obligatorio)
+        while True:
+            apellido = input("Apellido: ").strip()
+            if not apellido:
+                print("\n❌ El apellido es obligatorio.")
+                if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                    break
+                continue
+            break
+        datos_perfil['apellido'] = apellido
+
+        # Email (opcional pero con validación de formato)
+        while True:
+            email = input("Email (opcional): ").strip()
+            if not email:
+                break
+            if '@' not in email or '.' not in email:
+                print("\n❌ El formato del email no es válido.")
+                print("   Debe ser formato: usuario@dominio.com")
+                if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                    break
+                continue
+            break
+        datos_perfil['email'] = email
+
+        datos_perfil['telefono'] = input("Teléfono (opcional): ").strip()
+        datos_perfil['direccion'] = input("Dirección (opcional): ").strip()
+
+        return datos_perfil
+    
+
+    def _recopilar_datos_nuevo_usuario(self):
+        """Recopila los datos necesarios para crear un nuevo usuario"""       
+        self.mostrar_encabezado("👤 CREAR NUEVO USUARIO")
+        datos_recopilados = {}
+
+        # 1. Solicitar nombre de usuario
+        nombre_usuario = None
+        while True: # Bucle para asegurar un nombre de usuario único
+            nombre_usuario_input = input("Nombre de usuario: ").strip()
+            nombre_usuario_normalizado = nombre_usuario_input.lower() # Normalizar para la verificación
+
+            if nombre_usuario_normalizado in self.sistema.usuarios:
+                print("\n❌ Este nombre de usuario ya existe. Por favor, elija otro.")
+                # No pausar aquí para permitir un nuevo intento inmediato en el bucle
+            else:
+                break # Nombre de usuario único, salimos del bucle
+        nombre_usuario = nombre_usuario_normalizado
+        datos_recopilados['nombre_usuario'] = nombre_usuario
+        print(f"\n✅ Nombre de usuario '{nombre_usuario}' aceptado.")
+                
+        # 2. Recoger y validar contraseña
+        contrasena = None
+        while True:
+            contrasena = input("Contraseña: ").strip()
+            es_valida, mensaje = validar_contrasena(contrasena)
+            if es_valida:
+                break
+            print(f"\n❌ {mensaje}")
+            if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+                return 
+        datos_recopilados['contrasena'] = contrasena
+        print(f"\n✅ Contraseña aceptada para '{nombre_usuario}'.")
+        
+        #3. Recoger datos del perfil
+        # Preguntar si desea completar el perfil ahora
+        datos_perfil = {}
+        print("\n¿Desea completar los datos del perfil ahora?")
+        print("1. Sí, completar ahora")
+        print("2. No, completar más tarde")
+            
+        opcion = input("\nSeleccione una opción (1-2): ").strip()
+        if opcion == "1":
+            datos_perfil = self._recopilar_datos_perfil()
+        elif opcion == "2":
+            print("\n✅ Puede completar el perfil más tarde.")
+        else:
+            print("\n❌ Opción no válida. No se completará el perfil ahora.")
+            pausar()
+        datos_recopilados['datos_perfil'] = datos_perfil
+        return datos_recopilados
+    
+    def crear_usuario(self):
+        """Permite crear un nuevo usuario estándar, delegando la lógica al sistema."""
+
+        # 1. Recolecta todos los datos usando el método común de MenuBase
+        datos = self._recopilar_datos_nuevo_usuario()
+        if datos is None: # Si el usuario canceló en algún punto de la recolección
+            return False
+
+        # 2. Delega la creación real del usuario al sistema
+        
+        nuevo_usuario = self.sistema.crear_nuevo_usuario(
+            nombre_usuario=datos['nombre_usuario'],
+            contrasena=datos['contrasena'],
+            datos_perfil=datos['datos_perfil']   # Este menú siempre crea usuarios estándar
+        )
+
+        # 3. Muestra el resultado de la operación
+        if nuevo_usuario:
+            print(f"\n✅ Usuario '{nuevo_usuario.nombre_usuario}' creado exitosamente como Usuario Estándar.")
+            # Accede a los datos del perfil a través de nuevo_usuario.perfil
+            if nuevo_usuario.perfil.nombre and nuevo_usuario.perfil.apellido:
+                print(f"    • Nombre: {nuevo_usuario.perfil.nombre} {nuevo_usuario.perfil.apellido}")
+            if nuevo_usuario.perfil.email:
+                print(f"    • Email: {nuevo_usuario.perfil.email}")
+            if nuevo_usuario.perfil.telefono:
+                print(f"    • Teléfono: {nuevo_usuario.perfil.telefono}")
+            if nuevo_usuario.perfil.direccion:
+                print(f"    • Dirección: {nuevo_usuario.perfil.direccion}")
+            print(f"    • ID Perfil: {nuevo_usuario.perfil.id_perfil}")
+
+            if not nuevo_usuario.perfil.tiene_datos_completos():
+                print("\n⚠️  El perfil está incompleto. Deberá completar los datos obligatorios para continuar accediendo al sistema.")
+            pausar() # Usa pausar() de func_aux
+            return True
+        else:
+            print("\n❌ No se pudo crear el usuario (posiblemente ya existe o hubo un error interno).")
+            pausar() # Usa pausar() de func_aux
+            return False
 
 
 class MenuPrincipal(MenuBase):
@@ -60,7 +201,7 @@ class MenuPrincipal(MenuBase):
                         menu_usuario = MenuUsuario(self.sistema)
                         menu_usuario.mostrar_menu()
             elif opcion == "2":
-                self.crear_nuevo_usuario()
+                self.crear_usuario()
             elif opcion == "3":
                 self.sistema.mostrar_credenciales_prueba()
             elif opcion == "4":
@@ -70,46 +211,7 @@ class MenuPrincipal(MenuBase):
                 print("\n❌ Opción no válida. Intente nuevamente.")
                 pausar()
     
-    def crear_nuevo_usuario(self):
-        """Permite crear un nuevo usuario estándar"""
-        self.mostrar_encabezado("👤 CREAR NUEVO USUARIO")
+    
+      
         
-        # 1. Solicitar nombre de usuario
-        while True: # Bucle para asegurar un nombre de usuario único
-            nombre_usuario_input = input("Nombre de usuario: ").strip()
-            nombre_usuario_normalizado = nombre_usuario_input.lower() # Normalizar para la verificación
-
-            if nombre_usuario_normalizado in self.sistema.usuarios:
-                print("\n❌ Este nombre de usuario ya existe. Por favor, elija otro.")
-                # No pausar aquí para permitir un nuevo intento inmediato en el bucle
-            else:
-                break # Nombre de usuario único, salimos del bucle
-        nombre_usuario = nombre_usuario_normalizado
-        
-        
-        # 2. Solicitar y validar contraseña
-        while True:
-            contrasena = input("Contraseña: ").strip()
-            es_valida, mensaje = validar_contrasena(contrasena)
-            if es_valida:
-                break
-            print(f"\n❌ {mensaje}")
-            if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                return
-        
-        # 3. Solicitar datos del perfil
-        print("\n📋 DATOS DEL PERFIL")
-        nombre = input("Nombre: ").strip()
-        apellido = input("Apellido: ").strip()
-        email = input("Email: ").strip()
-        telefono = input("Teléfono: ").strip()
-        direccion = input("Dirección: ").strip()
-        nuevo_perfil = Perfil(nombre, apellido, email, telefono, direccion)
-        
-        # 4. Crear el usuario
-        nuevo_usuario = UsuarioEstandar(nombre_usuario, contrasena, nuevo_perfil)
-        self.sistema.usuarios[nombre_usuario] = nuevo_usuario
-        
-        print("\n✅ Usuario creado exitosamente!")
-        pausar()
 

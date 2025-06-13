@@ -104,6 +104,38 @@ class SistemaAut:
         
         return False
     
+    def crear_nuevo_usuario(self, nombre_usuario, contrasena, datos_perfil):
+        """Crea un nuevo usuario (estandar) en el sistema"""
+        limpiar_pantalla()
+        mostrar_titulo("👤 CREAR NUEVO USUARIO")
+        if nombre_usuario.lower() in self.usuarios:
+            print("El nombre de usuario ya existe en el sistema.")
+            return None # Indicamos que no se pudo crear por nombre de usuario existente
+
+        # 1. Creamos instancia de Perfil
+        nuevo_perfil = Perfil(
+            nombre=datos_perfil.get('nombre', '').strip(),
+            apellido=datos_perfil.get('apellido', '').strip(),
+            email=datos_perfil.get('email', '').strip(),
+            telefono=datos_perfil.get('telefono', '').strip(),
+            direccion=datos_perfil.get('direccion', '').strip()
+        )
+
+        # 2. Creamos instancia de UsuarioEstandar
+        nuevo_usuario = UsuarioEstandar(
+            nombre_usuario=nombre_usuario.lower(),  # Normalizamos el nombre de usuario a minúsculas
+            contrasena=contrasena,
+            datos_perfil=nuevo_perfil
+        )
+
+        # 3. Agregamos el nuevo usuario al sistema
+        self.usuarios[nombre_usuario.lower()] = nuevo_usuario
+        print("\n✅ Usuario creado exitosamente.") #No deberían estar?
+        pausar()
+
+        return nuevo_usuario        
+
+    
     def verificar_credenciales(self, nombre_usuario, contrasena):
         """Verifica si las credenciales son válidas"""
         nombre_usuario = nombre_usuario.lower()
