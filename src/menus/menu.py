@@ -1,5 +1,6 @@
 from src.utils.func_aux import *
 from src.models.usuario_estandar import UsuarioEstandar
+from src.models.perfil import Perfil
 
 class MenuBase:
     def __init__(self, sistema):
@@ -74,11 +75,17 @@ class MenuPrincipal(MenuBase):
         self.mostrar_encabezado("👤 CREAR NUEVO USUARIO")
         
         # 1. Solicitar nombre de usuario
-        nombre_usuario = input("Nombre de usuario: ").strip()
-        if nombre_usuario in self.sistema.usuarios:
-            print("\n❌ Este nombre de usuario ya existe.")
-            pausar()
-            return
+        while True: # Bucle para asegurar un nombre de usuario único
+            nombre_usuario_input = input("Nombre de usuario: ").strip()
+            nombre_usuario_normalizado = nombre_usuario_input.lower() # Normalizar para la verificación
+
+            if nombre_usuario_normalizado in self.sistema.usuarios:
+                print("\n❌ Este nombre de usuario ya existe. Por favor, elija otro.")
+                # No pausar aquí para permitir un nuevo intento inmediato en el bucle
+            else:
+                break # Nombre de usuario único, salimos del bucle
+        nombre_usuario = nombre_usuario_normalizado
+        
         
         # 2. Solicitar y validar contraseña
         while True:
@@ -97,9 +104,10 @@ class MenuPrincipal(MenuBase):
         email = input("Email: ").strip()
         telefono = input("Teléfono: ").strip()
         direccion = input("Dirección: ").strip()
+        nuevo_perfil = Perfil(nombre, apellido, email, telefono, direccion)
         
         # 4. Crear el usuario
-        nuevo_usuario = UsuarioEstandar(nombre_usuario, nombre, apellido, contrasena, email, telefono, direccion)
+        nuevo_usuario = UsuarioEstandar(nombre_usuario, contrasena, nuevo_perfil)
         self.sistema.usuarios[nombre_usuario] = nuevo_usuario
         
         print("\n✅ Usuario creado exitosamente!")

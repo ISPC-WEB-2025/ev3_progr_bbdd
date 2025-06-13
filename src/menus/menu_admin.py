@@ -1,28 +1,13 @@
 from src.menus.menu import MenuBase
 from src.models.usuario_estandar import UsuarioEstandar
 from src.models.admin import Admin
-from src.utils.func_aux import pausar, validar_contrasena
+from src.utils.func_aux import *
 from src.utils.perfil_utils import PerfilUtils
 # from datetime import datetime
 
 class MenuAdmin(MenuBase):
     def __init__(self, sistema):
         super().__init__(sistema)
-    
-    # def mostrar_opcion(self, numero, emoji, texto):
-    #     """Muestra una opción del menú con formato"""
-    #     print(f"{numero}. {emoji} {texto}")
-    
-    # def obtener_opcion(self, max_opciones):
-    #     """Obtiene y valida la opción seleccionada por el usuario"""
-    #     while True:
-    #         opcion = input(f"Seleccione una opción (1-{max_opciones}): ").strip()
-    #         if opcion.isdigit() and 1 <= int(opcion) <= max_opciones:
-    #             return opcion
-    #         from src.utils.func_aux import limpiar_pantalla
-    #         limpiar_pantalla()
-    #         print("\n❌ Opción no válida.")
-    #         pausar()
     
     def mostrar_menu(self):
         """Muestra el menú para administradores"""
@@ -183,6 +168,8 @@ class MenuAdmin(MenuBase):
                 contrasena = input("Contraseña: ").strip()
                 es_valida, mensaje = validar_contrasena(contrasena)
                 if es_valida:
+                    #contrasena = encriptar_contrasena(contrasena)
+                    # Por motivos de seguridad, la contraseña debería ser encriptada antes de guardarla
                     break
                 print(f"\n❌ {mensaje}")
                 if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
