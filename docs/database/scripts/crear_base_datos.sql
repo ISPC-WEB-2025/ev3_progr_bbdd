@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS perfiles (
     -- fecha_nacimiento DATE, -- faltó incorporar
     direccion VARCHAR(255),
     telefono VARCHAR(50),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE -- Opcional: si un usuario es eliminado, su perfil también
+        ON UPDATE CASCADE -- Opcional: si el id_usuario en usuarios cambia, se actualiza aquí
 );
 
 -- Crear tabla de sesiones
