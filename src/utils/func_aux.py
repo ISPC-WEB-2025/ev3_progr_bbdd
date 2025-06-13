@@ -24,6 +24,7 @@ def validar_contrasena(contrasena):
 
     return True, "Contraseña válida."
 
+# NO HEMOS USADO ESTA FUNCIÓN
 # def encriptar_contrasena(contrasena):
 #     """Encripta la contraseña usando SHA256"""
 #     return hashlib.sha256(contrasena.encode()).hexdigest()

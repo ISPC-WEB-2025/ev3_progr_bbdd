@@ -2,6 +2,7 @@ from src.menus.menu import MenuBase
 from src.models.usuario_estandar import UsuarioEstandar
 from src.models.admin import Admin
 from src.utils.func_aux import *
+from src.models.perfil import Perfil
 from src.utils.perfil_utils import PerfilUtils
 # from datetime import datetime
 
@@ -90,7 +91,7 @@ class MenuAdmin(MenuBase):
             if opcion == '1':
                 self.mostrar_lista_usuarios()
             elif opcion == '2':
-                if not self.agregar_usuario():  # Si retorna False, continuar en el menú
+                if not self.crear_usuario():  # Si retorna False, continuar en el menú
                     continue
             elif opcion == '3':
                 self.ver_detalles_usuario()
@@ -142,122 +143,130 @@ class MenuAdmin(MenuBase):
         
         pausar()
     
-    def agregar_usuario(self):
-        """Agrega un nuevo usuario al sistema"""
-        self.mostrar_encabezado("➕ AGREGAR USUARIO")
+    # def agregar_usuario(self): 
+    # método comentado ya que es redundante con el método usado en el menú inicial
+    #  
+    #     """Agrega un nuevo usuario al sistema"""
+    #     self.mostrar_encabezado("➕ AGREGAR USUARIO")
         
-        try:
-            # 1. Solicitar nombre de usuario
-            while True:
-                nombre_usuario = input("Nombre de usuario: ").strip()
-                if not nombre_usuario:
-                    print("\n❌ El nombre de usuario no puede estar vacío.")
-                    if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                        return False # Si no desea intentar de nuevo, retorna a menú principal
-                    continue
-                if nombre_usuario.lower() in self.sistema.usuarios:
-                    print("\n❌ El nombre de usuario ya existe.")
-                    if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                        return False # Si no desea intentar de nuevo, retorna a menú principal
-                    continue
-                break
+    #     try:
+    #         # 1. Solicitar nombre de usuario
+    #         while True:
+    #             nombre_usuario = input("Nombre de usuario: ").strip()
+    #             if not nombre_usuario:
+    #                 print("\n❌ El nombre de usuario no puede estar vacío.")
+    #                 if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+    #                     return False # Si no desea intentar de nuevo, retorna a menú principal
+    #                 continue
+    #             if nombre_usuario.lower() in self.sistema.usuarios:
+    #                 print("\n❌ El nombre de usuario ya existe.")
+    #                 if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+    #                     return False # Si no desea intentar de nuevo, retorna a menú principal
+    #                 continue
+    #             break
             
-            # 2. Solicitar y validar contraseña
-            contrasena = None #inicializamos la contraseña
-            while True:
-                contrasena = input("Contraseña: ").strip()
-                es_valida, mensaje = validar_contrasena(contrasena)
-                if es_valida:
-                    #contrasena = encriptar_contrasena(contrasena)
-                    # Por motivos de seguridad, la contraseña debería ser encriptada antes de guardarla
-                    break
-                print(f"\n❌ {mensaje}")
-                if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                    return False # Si no desea intentar de nuevo, retorna a menú principal
+    #         # 2. Solicitar y validar contraseña
+    #         contrasena = None #inicializamos la contraseña
+    #         while True:
+    #             contrasena = input("Contraseña: ").strip()
+    #             es_valida, mensaje = validar_contrasena(contrasena)
+    #             if es_valida:
+    #                 #contrasena = encriptar_contrasena(contrasena)
+    #                 # Por motivos de seguridad, la contraseña debería ser encriptada antes de guardarla
+    #                 break
+    #             print(f"\n❌ {mensaje}")
+    #             if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+    #                 return False # Si no desea intentar de nuevo, retorna a menú principal
             
-            # 3. Preguntar si desea completar el perfil ahora
-            print("\n¿Desea completar los datos del perfil ahora?")
-            print("1. Sí, completar ahora")
-            print("2. No, completar más tarde")
+    #         # 3. Preguntar si desea completar el perfil ahora
+    #         print("\n¿Desea completar los datos del perfil ahora?")
+    #         print("1. Sí, completar ahora")
+    #         print("2. No, completar más tarde")
             
-            opcion = input("\nSeleccione una opción (1-2): ").strip()
+    #         opcion = input("\nSeleccione una opción (1-2): ").strip()
             
-            # Valores por defecto para datos opcionales
-            nombre = ""
-            apellido = ""
-            email = ""
-            telefono = ""
-            direccion = ""
+    #         # Valores por defecto para datos opcionales
+    #         nombre = ""
+    #         apellido = ""
+    #         email = ""
+    #         telefono = ""
+    #         direccion = ""
             
-            if opcion == '1':
-                print("\n📋 DATOS DEL PERFIL")
+    #         if opcion == '1':
+    #             print("\n📋 DATOS DEL PERFIL")
                 
-                # Validar nombre
-                while True:
-                    nombre = input("Nombre: ").strip()
-                    if not nombre:
-                        print("\n❌ El nombre es obligatorio.")
-                        if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                            break  # Si no desea intentar de nuevo, continuamos con los datos vacíos
-                        continue
-                    break
+    #             # Validar nombre
+    #             while True:
+    #                 nombre = input("Nombre: ").strip()
+    #                 if not nombre:
+    #                     print("\n❌ El nombre es obligatorio.")
+    #                     if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+    #                         break  # Si no desea intentar de nuevo, continuamos con los datos vacíos
+    #                     continue
+    #                 break
                 
-                # Validar apellido
-                while True:
-                    apellido = input("Apellido: ").strip()
-                    if not apellido:
-                        print("\n❌ El apellido es obligatorio.")
-                        if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                            break  # Si no desea intentar de nuevo, continuamos con los datos vacíos
-                        continue
-                    break
+    #             # Validar apellido
+    #             while True:
+    #                 apellido = input("Apellido: ").strip()
+    #                 if not apellido:
+    #                     print("\n❌ El apellido es obligatorio.")
+    #                     if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+    #                         break  # Si no desea intentar de nuevo, continuamos con los datos vacíos
+    #                     continue
+    #                 break
                 
-                # Email opcional pero con validación de formato
-                while True:
-                    email = input("Email (opcional): ").strip()
-                    if not email:
-                        break  # Si no hay email, continuamos
-                    if '@' not in email or '.' not in email:
-                        print("\n❌ El formato del email no es válido.")
-                        print("   Debe ser formato: usuario@dominio.com")
-                        if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
-                            break  # Si no desea intentar de nuevo, continuamos con email vacío
-                        continue
-                    break
+    #             # Email opcional pero con validación de formato
+    #             while True:
+    #                 email = input("Email (opcional): ").strip()
+    #                 if not email:
+    #                     break  # Si no hay email, continuamos
+    #                 if '@' not in email or '.' not in email:
+    #                     print("\n❌ El formato del email no es válido.")
+    #                     print("   Debe ser formato: usuario@dominio.com")
+    #                     if input("\n¿Desea intentar de nuevo? (s/n): ").lower() != 's':
+    #                         break  # Si no desea intentar de nuevo, continuamos con email vacío
+    #                     continue
+    #                 break
                 
-                # Teléfono y dirección son opcionales
-                telefono = input("Teléfono (opcional): ").strip()
-                direccion = input("Dirección (opcional): ").strip()
+    #             # Teléfono y dirección son opcionales
+    #             telefono = input("Teléfono (opcional): ").strip()
+    #             direccion = input("Dirección (opcional): ").strip()
             
-            # 4. Crear el usuario (siempre como estándar)
-            nuevo_usuario = UsuarioEstandar(nombre_usuario, nombre, apellido, contrasena, 
-                                          email, telefono, direccion)
+    #         # 5. Crear el perfil del usuario
+    #         nuevo_perfil = Perfil(nombre=nombre, 
+    #                               apellido=apellido, 
+    #                               email=email, 
+    #                               telefono=telefono, 
+    #                               direccion=direccion)
+
+    #         # 6. Crear el usuario (siempre como estándar)
+    #         nuevo_usuario = UsuarioEstandar(nombre_usuario, contrasena, nuevo_perfil)
+
+    #         # 7. Agregar al sistema
+    #         self.sistema.usuarios[nombre_usuario.lower()] = nuevo_usuario
             
-            # 5. Agregar al sistema
-            self.sistema.usuarios[nombre_usuario.lower()] = nuevo_usuario
+    #         # 8. Mostrar confirmación
+    #         print(f"\n✅ Usuario '{nombre_usuario}' creado exitosamente como Usuario Estándar.")
+    #         if nombre and apellido:
+    #             print(f"   • Nombre: {nombre} {apellido}")
+    #         if email:
+    #             print(f"   • Email: {email}")
+    #         if telefono:
+    #             print(f"   • Teléfono: {telefono}")
+    #         if direccion:
+    #             print(f"   • Dirección: {direccion}")
+    #         print(f"   • ID Perfil: {nuevo_usuario.perfil.id_perfil}")
             
-            # 6. Mostrar confirmación
-            print(f"\n✅ Usuario '{nombre_usuario}' creado exitosamente como Usuario Estándar.")
-            if nombre and apellido:
-                print(f"   • Nombre: {nombre} {apellido}")
-            if email:
-                print(f"   • Email: {email}")
-            if telefono:
-                print(f"   • Teléfono: {telefono}")
-            if direccion:
-                print(f"   • Dirección: {direccion}")
-            print(f"   • ID Perfil: {nuevo_usuario.perfil.id_perfil}")
+    #         if not nombre or not apellido:
+    #             print("\n⚠️  El perfil está incompleto. Deberá completar los datos obligatorios para continuar accediendo al sistema.")
             
-            if not nombre or not apellido:
-                print("\n⚠️  El perfil está incompleto. Deberá completar los datos obligatorios para continuar accediendo al sistema.")
-            
-        except Exception as e:
-            print(f"\n❌ Error al crear el usuario: {str(e)}")
-            print("Por favor, intente nuevamente.")
-            return False 
+    #     except Exception as e:
+    #         print(f"\n❌ Error al crear el usuario: {str(e)}")
+    #         print("Por favor, intente nuevamente.")
+    #         return False 
         
-        pausar()
-        return True # Si el usuario se crea correctamente, retorna a menú principal
+    #     pausar()
+    #     return True # Si el usuario se crea correctamente, retorna a menú principal
 
     def cambiar_rol_usuario(self):
         """Permite cambiar el rol de un usuario entre estándar y administrador"""
@@ -269,8 +278,8 @@ class MenuAdmin(MenuBase):
             pausar()
             return
         
-        usuario = self.sistema.usuarios[nombre_usuario]
-        rol_actual = "Administrador" if usuario.es_admin() else "Usuario Estándar"
+        usuario_a_modificar = self.sistema.usuarios[nombre_usuario]
+        rol_actual = "Administrador" if usuario_a_modificar.es_admin() else "Usuario Estándar"
         
         print(f"\nRol actual: {rol_actual}")
         print("\n¿A qué rol desea cambiarlo?")
@@ -287,7 +296,7 @@ class MenuAdmin(MenuBase):
         nuevo_rol = "Usuario Estándar" if opcion == '1' else "Administrador"
         
         # Si el usuario ya tiene el rol seleccionado
-        if (opcion == '1' and not usuario.es_admin()) or (opcion == '2' and usuario.es_admin()):
+        if (opcion == '1' and not usuario_a_modificar.es_admin()) or (opcion == '2' and usuario_a_modificar.es_admin()):
             print(f"\n⚠️ El usuario ya es {nuevo_rol}.")
             pausar()
             return
@@ -300,7 +309,7 @@ class MenuAdmin(MenuBase):
             return
             
         # Verificar si es el único administrador
-        if opcion == '1' and usuario.es_admin():
+        if opcion == '1' and usuario_a_modificar.es_admin():
             admins = [u for u in self.sistema.usuarios.values() if u.es_admin()]
             if len(admins) == 1:
                 print("\n❌ No se puede cambiar el rol del único administrador del sistema.")
@@ -308,16 +317,14 @@ class MenuAdmin(MenuBase):
                 return
             
         # Crear nuevo usuario con el rol seleccionado
-        perfil = usuario.perfil
+        perfil = usuario_a_modificar.perfil
         if opcion == '1':
-            nuevo_usuario = UsuarioEstandar(nombre_usuario, perfil.nombre, perfil.apellido, 
-                                          usuario.contrasena, perfil.email, perfil.telefono, 
-                                          perfil.direccion, perfil_id=perfil.id_perfil)
+            nuevo_usuario = UsuarioEstandar(nombre_usuario, usuario_a_modificar.contrasena, 
+                                            usuario_a_modificar.perfil)
         else:
-            nuevo_usuario = Admin(nombre_usuario, perfil.nombre, perfil.apellido, 
-                                usuario.contrasena, perfil.email, perfil.telefono, 
-                                perfil.direccion, perfil_id=perfil.id_perfil)
-        
+            nuevo_usuario = Admin(nombre_usuario, usuario_a_modificar.contrasena, 
+                                    usuario_a_modificar.perfil)
+
         # Reemplazar usuario existente
         self.sistema.usuarios[nombre_usuario] = nuevo_usuario
         

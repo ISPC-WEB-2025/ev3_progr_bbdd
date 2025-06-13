@@ -1,6 +1,8 @@
 from src.utils.func_aux import pausar
 
+# No se está usando todavía, pero se deja aquí para futuras implementaciones
 class PerfilUtils:
+    """Clase utilitaria para manejar operaciones relacionadas con el perfil del usuario"""
     @staticmethod
     def mostrar_datos_actuales(perfil):
         """Muestra los datos actuales del perfil"""
