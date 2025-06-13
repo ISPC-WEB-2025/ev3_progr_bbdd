@@ -278,8 +278,8 @@ class MenuAdmin(MenuBase):
             pausar()
             return
         
-        usuario = self.sistema.usuarios[nombre_usuario]
-        rol_actual = "Administrador" if usuario.es_admin() else "Usuario Estándar"
+        usuario_a_modificar = self.sistema.usuarios[nombre_usuario]
+        rol_actual = "Administrador" if usuario_a_modificar.es_admin() else "Usuario Estándar"
         
         print(f"\nRol actual: {rol_actual}")
         print("\n¿A qué rol desea cambiarlo?")
@@ -296,7 +296,7 @@ class MenuAdmin(MenuBase):
         nuevo_rol = "Usuario Estándar" if opcion == '1' else "Administrador"
         
         # Si el usuario ya tiene el rol seleccionado
-        if (opcion == '1' and not usuario.es_admin()) or (opcion == '2' and usuario.es_admin()):
+        if (opcion == '1' and not usuario_a_modificar.es_admin()) or (opcion == '2' and usuario_a_modificar.es_admin()):
             print(f"\n⚠️ El usuario ya es {nuevo_rol}.")
             pausar()
             return
@@ -309,7 +309,7 @@ class MenuAdmin(MenuBase):
             return
             
         # Verificar si es el único administrador
-        if opcion == '1' and usuario.es_admin():
+        if opcion == '1' and usuario_a_modificar.es_admin():
             admins = [u for u in self.sistema.usuarios.values() if u.es_admin()]
             if len(admins) == 1:
                 print("\n❌ No se puede cambiar el rol del único administrador del sistema.")
@@ -317,16 +317,14 @@ class MenuAdmin(MenuBase):
                 return
             
         # Crear nuevo usuario con el rol seleccionado
-        perfil = usuario.perfil
+        perfil = usuario_a_modificar.perfil
         if opcion == '1':
-            nuevo_usuario = UsuarioEstandar(nombre_usuario, perfil.nombre, perfil.apellido, 
-                                          usuario.contrasena, perfil.email, perfil.telefono, 
-                                          perfil.direccion, perfil_id=perfil.id_perfil)
+            nuevo_usuario = UsuarioEstandar(nombre_usuario, usuario_a_modificar.contrasena, 
+                                            usuario_a_modificar.perfil)
         else:
-            nuevo_usuario = Admin(nombre_usuario, perfil.nombre, perfil.apellido, 
-                                usuario.contrasena, perfil.email, perfil.telefono, 
-                                perfil.direccion, perfil_id=perfil.id_perfil)
-        
+            nuevo_usuario = Admin(nombre_usuario, usuario_a_modificar.contrasena, 
+                                    usuario_a_modificar.perfil)
+
         # Reemplazar usuario existente
         self.sistema.usuarios[nombre_usuario] = nuevo_usuario
         
