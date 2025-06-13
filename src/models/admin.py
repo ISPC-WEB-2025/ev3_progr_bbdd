@@ -3,9 +3,10 @@ from src.models.perfil import Perfil
 from src.utils.func_aux import *
 
 class Admin(Usuario):
-    def __init__(self, nombre_usuario, nombre, apellido, contrasena, email, telefono="", direccion="", perfil_id=None):
-        super().__init__(nombre_usuario, nombre, apellido, contrasena, email, telefono, direccion, perfil_id)
-    
+    def __init__(self, nombre_usuario, contrasena, datos_perfil):
+        """Inicializa un nuevo usuario administrador con sus datos básicos y perfil"""
+        super().__init__(nombre_usuario, contrasena, datos_perfil)
+
     def es_admin(self):
         """Indica si el usuario es administrador"""
         return True

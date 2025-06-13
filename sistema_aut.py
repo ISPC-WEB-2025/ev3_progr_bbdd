@@ -1,9 +1,11 @@
 from src.models.usuario_estandar import UsuarioEstandar
 from src.utils.func_aux import *
 from src.models.admin import Admin
+from src.models.perfil import Perfil
 
 
 class SistemaAut:
+    """Clase para manejar el sistema de autenticación de usuarios"""
     def __init__(self):
         self.usuarios = {} # Diccionario para almacenar usuarios
         self.usuario_actual = None # Usuario que está logueado actualmente
@@ -12,20 +14,39 @@ class SistemaAut:
     def crear_usuarios_iniciales(self):
         """Crea los usuarios predeterminados del sistema"""
         # Crear administrador
-        admin = Admin("admin", "Administrador", "Sistema", "admin123",
-                     "admin@sistema.com", "+54-11-1234-5678", "Av. Principal 123, CABA", perfil_id=1)
+        perfil_admin = Perfil(
+            nombre="Administrador",
+            apellido="Sistema",
+            email="admin@sistema.com",
+            telefono="+54-11-1234-5678",
+            direccion="Av. Principal 123, CABA",
+            id_perfil=1 # Usamos el ID predefinido para este perfil
+        )
+        admin = Admin("admin", "admin123", perfil_admin)
         self.usuarios[admin.nombre_usuario.lower()] = admin
-        
+
         # Crear usuarios estándar
-        usuario1 = UsuarioEstandar("usuario1", "Juan", "Pérez", "user123",
-                                  "juan.perez@email.com", "+54-11-9876-5432", "Calle Falsa 456", perfil_id=2)
+        perfil_usuario1 = Perfil(
+            nombre="Juan",
+            apellido="Pérez",
+            email="juan.perez@email.com",
+            telefono="+54-11-9876-5432",
+            direccion="Calle Falsa 456",
+            id_perfil=2
+        )
+        usuario1 = UsuarioEstandar("usuario1", "user123", perfil_usuario1)
         self.usuarios[usuario1.nombre_usuario.lower()] = usuario1
-        
-        usuario2 = UsuarioEstandar("maria", "María", "García", "maria456",
-                                  "maria.garcia@email.com", "", "Av. Libertador 789", perfil_id=3)
+
+        perfil_usuario2 = Perfil(
+            nombre="María",
+            apellido="García",
+            email="maria.garcia@email.com",
+            telefono="",
+            direccion="Av. Libertador 789",
+            id_perfil=3
+        )
+        usuario2 = UsuarioEstandar("maria", "maria456", perfil_usuario2)
         self.usuarios[usuario2.nombre_usuario.lower()] = usuario2
-
-
     
     def mostrar_credenciales_prueba(self):
         """Muestra las credenciales de prueba"""
